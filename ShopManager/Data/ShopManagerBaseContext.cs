@@ -4,9 +4,6 @@ using ShopManager.DomainModels;
 
 namespace ShopManager.Data;
 
-public class ShopManagerBaseContext : IdentityDbContext<ApplicationUser>
+public class ShopManagerBaseContext(DbContextOptions options) : IdentityDbContext<ApplicationUser>(options)
 {
-    public ShopManagerBaseContext(DbContextOptions options) : base(options)
-    {
-    }
 }

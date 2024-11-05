@@ -1,6 +1,6 @@
 ﻿namespace ShopManager.DomainModels
 {
-    public class Product
+    public class Product : BaseDomainModel
     {
         public Guid SupplierId { get; set; }
 
@@ -15,7 +15,7 @@
         public FairlyUsed FairlyUsed { get; set; } = new();
     }
 
-    public class Category
+    public class Category : BaseDomainModel
     {
         public Guid CategoryId { get; set; }
 
@@ -24,17 +24,25 @@
         public string CategoryDescription { get; set; } = string.Empty;
     }
 
-    public class Customer
+    public class Customer : BaseDomainModel
     {
-        
+        public string FirstName { get; set; } = string.Empty;
+
+        public string LastName { get; set; } = string.Empty;
+
+        public string EmailAddress { get; set; } = string.Empty;
+
+        public string PhoneNumber { get; set; } = string.Empty;
+
+        public string Address { get; set; } = string.Empty;
     }
 
-    public class Supplier
+    public class Supplier : BaseDomainModel
     {
 
     }
 
-    public class Inventory
+    public class Inventory : BaseDomainModel
     {
         public Guid ProductId { get; set; }
 
@@ -45,7 +53,7 @@
         public float ReOrderQuantity { get; set; }
     }
 
-    public class Sales
+    public class Sales : BaseDomainModel
     {
         public Guid SaleId { get; set; }
 
@@ -92,24 +100,24 @@
         ZMW
     }
 
-    public class SaleItems
+    public class SaleItems : BaseDomainModel
     {
         public Guid SalesId { get; set; }
 
     }
 
-    public class Payments
+    public class Payments : BaseDomainModel
     {
         public Guid SalesId { get; set; }
 
     }
 
-    public class FairlyUsed
+    public class FairlyUsed : BaseDomainModel
     {
         
     }
 
-    public class FairlyUsedItems
+    public class FairlyUsedItems : BaseDomainModel
     {
 
     }
