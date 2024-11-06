@@ -27,6 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Data\EntityTypeConfigurations\" />
     <Folder Include="Endpoints\" />
     <Folder Include="Services\" />
   </ItemGroup>

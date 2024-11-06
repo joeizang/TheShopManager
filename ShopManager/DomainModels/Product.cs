@@ -22,13 +22,15 @@ using ShopManager.Extensions;
 
         public Guid CategoryId { get; set; }
 
-        public Category Category { get; set; } = new();
+        public List<Category> Categories { get; set; } = new();
 
-        public Guid? FairlyUsedId { get; set; }
+        public Guid? FairlyUsedItemId { get; set; }
 
-        public FairlyUsedItem? FairlyUsed { get; set; }
+        public FairlyUsedItem? FairlyUsedItem { get; set; }
 
         public Guid ShopId { get; set; }
+
+        public Shop Shop { get; set; } = new();
     }
 
     public class Category : BaseDomainModel
@@ -54,7 +56,11 @@ using ShopManager.Extensions;
 
         public string Address { get; set; } = string.Empty;
 
+        public List<Sale> Sales { get; set; } = new();
+
         public Guid ShopId { get; set; }
+
+        public Shop Shop { get; set; } = default!;
     }
 
     public class Supplier : BaseDomainModel
@@ -68,6 +74,10 @@ using ShopManager.Extensions;
         public string SupplierEmailAddress { get; set; } = string.Empty;
 
         public Guid ShopId { get; set; }
+
+        public Shop Shop { get; set; } = default!;
+
+        public List<Product> Products { get; set; } = new();
     }
 
     public class Inventory : BaseDomainModel
@@ -83,13 +93,13 @@ using ShopManager.Extensions;
         public Guid ShopId { get; set; }
     }
 
-    public class Sales : BaseDomainModel
+    public class Sale : BaseDomainModel
     {
         public Guid SaleId { get; set; }
 
         public ZonedDateTime SaleDate { get; set; }
 
-        public required Money TotalAmount { get; set; }
+        public Money TotalAmount { get; set; } = new(Currency.NGN, 0m);
 
         public Guid? CustomerId { get; set; }
         
@@ -100,6 +110,10 @@ using ShopManager.Extensions;
         public ApplicationUser SalesPerson { get; set; } = default!;
 
         public Guid ShopId { get; set; }
+
+        public Shop Shop { get; set; } = default!;
+
+        public List<SaleItems> SaleItems { get; set; } = new();
     }
 
     public record Money(Currency Currency, decimal Amount);
@@ -134,11 +148,17 @@ using ShopManager.Extensions;
 
     public class SaleItems : BaseDomainModel
     {
-        public Guid SalesId { get; set; }
+        public Guid SaleId { get; set; }
+
+        public Sale Sale { get; set; } = default!;
 
         public Guid ShopId { get; set; }
 
+        public Shop Shop { get; set; } = default!;
+
         public Guid ProductId { get; set; }
+
+        public Product Product { get; set; } = default!;
 
         public float QuantitySold { get; set; }
 
@@ -189,6 +209,10 @@ using ShopManager.Extensions;
         public Guid CustomerId { get; set; }
 
         public Customer Customer { get; set; } = default!;
+
+        public Guid ProductId { get; set; }
+
+        public Product Product { get; set; } = default!;
 
         public ZonedDateTime DateBought { get; set; }
 
