@@ -10,6 +10,8 @@ public class SaleEntityTypeConfiguration : IEntityTypeConfiguration<Sale>
     public void Configure(EntityTypeBuilder<Sale> builder)
     {
         builder.HasKey(s => s.Id);
+        builder.Property(s => s.Id)
+            .ValueGeneratedOnAdd();
 
         builder.Property(s => s.SaleDate)
             .IsRequired();

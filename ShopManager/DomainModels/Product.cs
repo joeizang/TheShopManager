@@ -42,6 +42,8 @@ using ShopManager.Extensions;
         public string CategoryDescription { get; set; } = string.Empty;
 
         public Guid ShopId { get; set; }
+
+        public Shop Shop { get; set; } = default!;
     }
 
     public class Customer : BaseDomainModel
@@ -84,6 +86,8 @@ using ShopManager.Extensions;
     {
         public Guid ProductId { get; set; }
 
+        public Product Product { get; set; } = default!;
+
         public float QuantityInStock { get; set; }
 
         public float ReOrderLevel { get; set; }
@@ -91,6 +95,8 @@ using ShopManager.Extensions;
         public float ReOrderQuantity { get; set; }
 
         public Guid ShopId { get; set; }
+
+        public Shop Shop { get; set; } = default!;
     }
 
     public class Sale : BaseDomainModel
@@ -102,7 +108,7 @@ using ShopManager.Extensions;
         public Money TotalAmount { get; set; } = new(Currency.NGN, 0m);
 
         public Guid? CustomerId { get; set; }
-        
+
         public Customer Customer { get; set; } = default!;
 
         public Guid SalesPersonId { get; set; }
@@ -113,7 +119,9 @@ using ShopManager.Extensions;
 
         public Shop Shop { get; set; } = default!;
 
-        public List<SaleItems> SaleItems { get; set; } = new();
+        public List<SaleItem> SaleItems { get; set; } = new();
+
+        public List<Payment> Payments { get; set; } = new();
     }
 
     public record Money(Currency Currency, decimal Amount);
@@ -146,7 +154,7 @@ using ShopManager.Extensions;
         ZMW
     }
 
-    public class SaleItems : BaseDomainModel
+    public class SaleItem : BaseDomainModel
     {
         public Guid SaleId { get; set; }
 
@@ -168,17 +176,21 @@ using ShopManager.Extensions;
 
     }
 
-    public class Payments : BaseDomainModel
+    public class Payment : BaseDomainModel
     {
         public Guid SalesId { get; set; }
 
+        public Sale Sale { get; set; } = default!;
+
         public Guid ShopId { get; set; }
+
+        public Shop Shop { get; set; } = default!;
 
         public Money AmountPaid { get; set; } = new(Currency.NGN, 0m);
 
         public ZonedDateTime PaymentDate { get; set; }
 
-        public string PaymentMethod { get; set; } = string.Empty;
+        public PaymentMethod PaymentMethod { get; set; }
 
         public string PaymentReference { get; set; } = string.Empty;
 

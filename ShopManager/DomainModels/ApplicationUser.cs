@@ -7,6 +7,8 @@ public class ApplicationUser : IdentityUser
 {
     public Guid ShopId { get; set; }
 
+    public Shop Shop { get; set; } = default!;
+
     public string FirstName { get; set; } = string.Empty;
 
     public string LastName { get; set; } = string.Empty;

@@ -10,6 +10,8 @@ public class ProductEntityTypeConfiguration : IEntityTypeConfiguration<Product>
     public void Configure(EntityTypeBuilder<Product> builder)
     {
         builder.HasKey(p => p.Id);
+        builder.Property(s => s.Id)
+            .ValueGeneratedOnAdd();
 
         builder.Property(p => p.ProductName)
             .IsRequired()

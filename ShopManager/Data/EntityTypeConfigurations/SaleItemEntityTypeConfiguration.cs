@@ -5,11 +5,13 @@ using ShopManager.DomainModels;
 
 namespace ShopManager.Data.EntityTypeConfigurations;
 
-public class SaleItemEntityTypeConfiguration : IEntityTypeConfiguration<SaleItems>
+public class SaleItemEntityTypeConfiguration : IEntityTypeConfiguration<SaleItem>
 {
-    public void Configure(EntityTypeBuilder<SaleItems> builder)
+    public void Configure(EntityTypeBuilder<SaleItem> builder)
     {
         builder.HasKey(s => s.Id);
+        builder.Property(s => s.Id)
+            .ValueGeneratedOnAdd();
 
         builder.Property(s => s.QuantitySold)
             .HasPrecision(10, 2)
