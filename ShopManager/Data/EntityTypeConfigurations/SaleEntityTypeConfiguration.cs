@@ -16,10 +16,8 @@ public class SaleEntityTypeConfiguration : IEntityTypeConfiguration<Sale>
         builder.Property(s => s.SaleDate)
             .IsRequired();
 
-        builder.Property(s => s.TotalAmount)
+        builder.ComplexProperty(s => s.TotalAmount)
             .IsRequired();
-        
-        builder.ComplexProperty(s => s.TotalAmount);
 
         builder.HasOne(s => s.Customer)
             .WithMany(c => c.Sales)

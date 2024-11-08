@@ -25,15 +25,11 @@ public class ProductEntityTypeConfiguration : IEntityTypeConfiguration<Product>
             .IsRequired()
             .HasMaxLength(50);
 
-        builder.Property(p => p.CostPrice)
-            .IsRequired();
-        
-        builder.ComplexProperty(p => p.CostPrice);
-
-        builder.Property(p => p.SellingPrice)
+        builder.ComplexProperty(p => p.CostPrice)
             .IsRequired();
 
-        builder.ComplexProperty(p => p.SellingPrice);
+        builder.ComplexProperty(p => p.SellingPrice)
+            .IsRequired();
 
         builder.Property(p => p.IsFairlyUsed)
             .IsRequired();

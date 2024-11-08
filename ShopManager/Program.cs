@@ -12,10 +12,12 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddDbContext<ShopManagerBaseContext>(opt =>
 {
-    opt.UseNpgsql("Host=localhost;Database=ShopManager;Username=postgres;Password=postgres", opt => {
+    opt.UseNpgsql("Host=localhost;Database=shopplatform;Username=postgres;Password=postgres", opt => {
         opt.UseNodaTime();
+        opt.MapEnum<Currency>("currency");
+        opt.MapEnum<PaymentMethod>("payment_method");
+        opt.MapEnum<FairlyUsedItemCondition>("fairlyused_item_condition");
     });
-    opt.UseInMemoryDatabase("ShopManager");
     opt.EnableSensitiveDataLogging();
 });
 

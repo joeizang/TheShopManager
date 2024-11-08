@@ -13,7 +13,7 @@ public class PaymentEntityTypeConfiguration : IEntityTypeConfiguration<Payment>
         builder.Property(p => p.Id)
             .ValueGeneratedOnAdd();
 
-        builder.Property(p => p.AmountPaid)
+        builder.ComplexProperty(p => p.AmountPaid)
             .IsRequired();
 
         builder.Property(p => p.PaymentDate)

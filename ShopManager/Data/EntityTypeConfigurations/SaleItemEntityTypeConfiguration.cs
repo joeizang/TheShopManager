@@ -17,15 +17,11 @@ public class SaleItemEntityTypeConfiguration : IEntityTypeConfiguration<SaleItem
             .HasPrecision(10, 2)
             .IsRequired();
 
-        builder.Property(s => s.UnitPrice)
+        builder.ComplexProperty(s => s.UnitPrice)
             .IsRequired();
 
-        builder.ComplexProperty(s => s.UnitPrice);
-
-        builder.Property(s => s.TotalAmount)
+        builder.ComplexProperty(s => s.TotalAmount)
             .IsRequired();
-
-        builder.ComplexProperty(s => s.TotalAmount);
 
         builder.HasOne(s => s.Product)
             .WithMany()

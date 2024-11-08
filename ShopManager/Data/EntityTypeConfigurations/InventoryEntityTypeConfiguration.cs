@@ -19,7 +19,8 @@ public class InventoryEntityTypeConfiguration : IEntityTypeConfiguration<Invento
         builder.Property(i => i.ReOrderLevel)
             .IsRequired();
 
-        builder.ComplexProperty(i => i.ReOrderQuantity);
+        builder.Property(i => i.ReOrderQuantity)
+            .IsRequired();
 
         builder.HasOne(i => i.Product)
             .WithOne()

@@ -1,5 +1,7 @@
 ﻿namespace ShopManager.DomainModels;
 
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 using NodaTime;
 using ShopManager.Extensions;
     public class Product : BaseDomainModel
@@ -88,11 +90,11 @@ using ShopManager.Extensions;
 
         public Product Product { get; set; } = default!;
 
-        public float QuantityInStock { get; set; }
+        public double QuantityInStock { get; set; }
 
-        public float ReOrderLevel { get; set; }
+        public double ReOrderLevel { get; set; }
 
-        public float ReOrderQuantity { get; set; }
+        public double ReOrderQuantity { get; set; }
 
         public Guid ShopId { get; set; }
 
@@ -111,7 +113,7 @@ using ShopManager.Extensions;
 
         public Customer Customer { get; set; } = default!;
 
-        public Guid SalesPersonId { get; set; }
+        public string SalesPersonId { get; set; } = string.Empty;
 
         public ApplicationUser SalesPerson { get; set; } = default!;
 
@@ -124,9 +126,15 @@ using ShopManager.Extensions;
         public List<Payment> Payments { get; set; } = new();
     }
 
-    public record Money(Currency Currency, decimal Amount);
+public record Money(Currency currency, decimal amount)
+{
+    public Currency Currency { get; } = currency;
 
-    public enum Currency
+    [Column(TypeName = "decimal(18, 2)")]
+    public decimal Amount { get; } = amount;
+}
+
+public enum Currency
     {
         USD,
         NGN,
@@ -168,7 +176,7 @@ using ShopManager.Extensions;
 
         public Product Product { get; set; } = default!;
 
-        public float QuantitySold { get; set; }
+        public double QuantitySold { get; set; }
 
         public Money UnitPrice { get; set; } = new(Currency.NGN, 0m);
 
@@ -218,6 +226,8 @@ using ShopManager.Extensions;
 
     public class FairlyUsedItem : BaseDomainModel
     {
+        public Guid PurchaseId { get; set; }
+
         public Guid CustomerId { get; set; }
 
         public Customer Customer { get; set; } = default!;
@@ -245,7 +255,6 @@ using ShopManager.Extensions;
         public string ItemDetails { get; set; } = string.Empty;
 
         public Money Price { get; set; } = new(Currency.NGN, 0m);
-
 
     }
 
