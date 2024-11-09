@@ -2,10 +2,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ShopManager.Data;
 using ShopManager.DomainModels;
+using ShopManager.Features.Products;
 using ShopManager.Features.Shops;
 
 var builder = WebApplication.CreateBuilder(args);
-
+Console.WriteLine(Ulid.NewUlid().ToGuid());
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
@@ -18,9 +19,6 @@ builder.Services.AddDbContext<ShopManagerBaseContext>(opt =>
         opt.MapEnum<Currency>("currency");
         opt.MapEnum<PaymentMethod>("payment_method");
         opt.MapEnum<FairlyUsedItemCondition>("fairlyused_item_condition");
-
-        //very dangerous but very performant
-        // opt.EnableThreadSafetyChecks(enableChecks: false);
     });
     opt.EnableSensitiveDataLogging();
 });
@@ -43,5 +41,6 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.MapIdentityApi<ApplicationUser>();
 app.MapShopEndpoints();
+app.MapProductsEndpoints();
 
 app.Run();
