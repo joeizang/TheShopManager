@@ -31,5 +31,7 @@ public class PaymentEntityTypeConfiguration : IEntityTypeConfiguration<Payment>
         builder.HasIndex(p => p.ShopId);
 
         builder.HasIndex(p => p.SalesId);
+
+        builder.HasIndex(p => p.PaymentDate);
     }
 }

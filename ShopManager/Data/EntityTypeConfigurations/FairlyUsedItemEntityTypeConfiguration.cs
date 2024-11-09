@@ -51,6 +51,10 @@ public class FairlyUsedItemEntityTypeConfiguration : IEntityTypeConfiguration<Fa
             .HasForeignKey(f => f.ShopId)
             .IsRequired();
 
+        builder.HasIndex(f => f.CreatedAt);
+        builder.HasIndex(f => f.ShopId);
+        builder.HasIndex(f => f.CustomerId);
+        
         
     }
 }

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ShopManager.Data;
 using ShopManager.DomainModels;
+using ShopManager.Features.Shops;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,10 +18,13 @@ builder.Services.AddDbContext<ShopManagerBaseContext>(opt =>
         opt.MapEnum<Currency>("currency");
         opt.MapEnum<PaymentMethod>("payment_method");
         opt.MapEnum<FairlyUsedItemCondition>("fairlyused_item_condition");
+
+        //very dangerous but very performant
+        // opt.EnableThreadSafetyChecks(enableChecks: false);
     });
     opt.EnableSensitiveDataLogging();
 });
-
+builder.Services.AddScoped<ShopQueryService>();
 builder.Services.AddIdentityApiEndpoints<ApplicationUser>()
     .AddEntityFrameworkStores<ShopManagerBaseContext>()
     .AddApiEndpoints();
@@ -38,5 +42,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.MapIdentityApi<ApplicationUser>();
+app.MapShopEndpoints();
 
 app.Run();

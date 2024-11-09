@@ -35,5 +35,7 @@ public class InventoryEntityTypeConfiguration : IEntityTypeConfiguration<Invento
         builder.HasIndex(i => i.ProductId);
 
         builder.HasIndex(i => i.ShopId);
+
+        builder.HasIndex(i => i.CreatedAt);
     }
 }

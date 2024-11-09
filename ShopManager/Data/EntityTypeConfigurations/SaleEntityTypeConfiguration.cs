@@ -45,5 +45,7 @@ public class SaleEntityTypeConfiguration : IEntityTypeConfiguration<Sale>
         builder.HasIndex(p => p.SalesPersonId);
 
         builder.HasIndex(p => p.SaleDate);
+
+        builder.HasIndex(p => p.CreatedAt);
     }
 }
