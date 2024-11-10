@@ -28,11 +28,6 @@
 
   <ItemGroup>
     <Folder Include="Data\EntityTypeConfigurations\" />
-    <Folder Include="Features/Categories/" />
-    <Folder Include="Features/FairlyUsedItems/" />
-    <Folder Include="Features/Inventories/" />
-    <Folder Include="Features/Sales/" />
-    <Folder Include="Features/Suppliers/" />
     <Folder Include="Services\" />
   </ItemGroup>
 
