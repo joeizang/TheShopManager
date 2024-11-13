@@ -1,6 +1,6 @@
 @ShopManager_HostAddress = http://localhost:5013
 
-GET {{ShopManager_HostAddress}}/weatherforecast/
+GET {{ShopManager_HostAddress}}/api/v1/shops?cursor=2024-11-13T22:51:39.971Z
 Accept: application/json
 
 ###
