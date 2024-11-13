@@ -13,20 +13,20 @@ public class ShopQueryService
             context.Shops.AsNoTracking()
                 .Where(x => x.CreatedAt < cursor)
                 .OrderByDescending(x => x.CreatedAt)
-                .Select(s => new ShopDto(s.ShopName, s.ShopPhoneNumber, s.Status, s.ShopAddress, s.Id))
+                .Select(s => new ShopDto(s.ShopName, s.ShopPhoneNumber, s.Status, s.ShopAddress, s.Id, s.CreatedAt))
                 .Take(10));
     
     public static readonly Func<ShopManagerBaseContext, IAsyncEnumerable<ShopDto>>
         GetAllShops = EF.CompileAsyncQuery((ShopManagerBaseContext db) => 
             db.Shops.AsNoTracking()
                 .OrderByDescending(x => x.CreatedAt)
-                .Select(s => new ShopDto(s.ShopName, s.ShopPhoneNumber, s.Status, s.ShopAddress, s.Id))
+                .Select(s => new ShopDto(s.ShopName, s.ShopPhoneNumber, s.Status, s.ShopAddress, s.Id, s.CreatedAt))
                 .Take(10));
     
     public static readonly Func<ShopManagerBaseContext, Guid, ShopDto?>
         GetShopById = EF.CompileQuery((ShopManagerBaseContext db, Guid shopId) => 
             db.Shops.AsNoTracking()
                 .Where(x => x.Id == shopId)
-                .Select(s => new ShopDto(s.ShopName, s.ShopPhoneNumber, s.Status, s.ShopAddress, s.Id))
+                .Select(s => new ShopDto(s.ShopName, s.ShopPhoneNumber, s.Status, s.ShopAddress, s.Id, s.CreatedAt))
                 .SingleOrDefault());
 }
