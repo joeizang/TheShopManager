@@ -1,11 +1,17 @@
 using System;
+using ShopManager.Data;
 
 namespace ShopManager.Features.Shops;
 
-public class ShopsCommandService : IShopCommandService
+public class ShopsCommandService(ShopManagerBaseContext context) : IShopCommandService
 {
-    public Task<ShopDto> CreateShop(CreateShopDto model)
+    private readonly ShopManagerBaseContext _context = context;
+
+    public async Task<ShopDto> CreateShop(CreateShopDto model)
     {
-        throw new NotImplementedException();
+        var shop = model.MapToShop();
+        _context.Shops.Add(shop);
+        await _context.SaveChangesAsync();
+        return shop.MapToShopDto();
     }
 }

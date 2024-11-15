@@ -1,5 +1,6 @@
 using System;
 using ShopManager.DomainModels;
+using ShopManager.Features.Shops;
 
 namespace ShopManager.Extensions;
 

@@ -36,6 +36,12 @@ public class ShopEntityTypeConfiguration : IEntityTypeConfiguration<Shop>
         builder.Property(s => s.ShopLogo)
             .HasMaxLength(500)
             .IsRequired();
+
+        builder.Property(s => s.CacRegistrationNumber)
+            .HasMaxLength(20);
+        
+        builder.Property(s => s.TaxIdentificationNUmber)
+            .HasMaxLength(20);
         
         builder.Property(s => s.Status)
             .IsRequired();

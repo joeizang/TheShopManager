@@ -206,22 +206,22 @@ public enum Currency
 
     public enum PaymentMethod
     {
-        Cash,
+        CASH,
         POS,
-        BankTransfer,
+        BANK_TRANSFER,
         USSD,
-        Cheque,
-        MobileMoney,
-        CryptoCurrency
+        CHEQUE,
+        MOBILE_MONEY,
+        CRYPTO_CURRENCY
     }
 
     public enum FairlyUsedItemCondition
     {
-        Excellent,
-        VeryGood,
-        Good,
-        Fair,
-        Poor
+        EXCELLENT,
+        VERY_GOOD,
+        GOOD,
+        FAIR,
+        POOR
     }
 
     public class FairlyUsedItem : BaseDomainModel
@@ -271,6 +271,10 @@ public enum Currency
         public string ShopLogo { get; set; } = string.Empty;
 
         public string ShopDescription { get; set; } = string.Empty;
+
+        public string CacRegistrationNumber { get; set; } = string.Empty;
+
+        public string TaxIdentificationNUmber { get; set; } = string.Empty;
 
         public bool Status { get; set; } = false;
     }
