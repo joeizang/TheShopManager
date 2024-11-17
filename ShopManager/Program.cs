@@ -1,9 +1,13 @@
+using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using NodaTime;
+using NodaTime.Serialization.SystemTextJson;
 using ShopManager.Data;
 using ShopManager.DomainModels;
 using ShopManager.Features.Products;
 using ShopManager.Features.Shops;
+using ShopManager.Features.Shops.Validations;
 
 var builder = WebApplication.CreateBuilder(args);
 Console.WriteLine(Ulid.NewUlid().ToGuid());
@@ -22,7 +26,16 @@ builder.Services.AddDbContext<ShopManagerBaseContext>(opt =>
     });
     opt.EnableSensitiveDataLogging();
 });
+
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    options.SerializerOptions.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb);
+});
+
 builder.Services.AddScoped<ShopQueryService>();
+builder.Services.AddScoped<IValidator<CreateShopDto>, ValidateCreateShopDto>();
+builder.Services.AddScoped<IValidator<UpdateShopDto>, ValidateUpdateShopDto>();
+builder.Services.AddScoped<IShopCommandService, ShopsCommandService>();
 builder.Services.AddIdentityApiEndpoints<ApplicationUser>()
     .AddEntityFrameworkStores<ShopManagerBaseContext>()
     .AddApiEndpoints();
