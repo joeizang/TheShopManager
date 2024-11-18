@@ -22,6 +22,9 @@ builder.Services.AddDbContext<ShopManagerBaseContext>(opt =>
         opt.UseNodaTime();
         opt.MapEnum<Currency>("currency");
         opt.MapEnum<PaymentMethod>("payment_method");
+        opt.MapEnum<ActivationStatus>("activation_status");
+        opt.MapEnum<PaymentStatus>("payment_status");
+        opt.MapEnum<BillingCycle>("billing_cycle");
         opt.MapEnum<FairlyUsedItemCondition>("fairlyused_item_condition");
     });
     opt.EnableSensitiveDataLogging();
