@@ -29,4 +29,5 @@ public class ShopQueryService
                 .Where(x => x.Id == shopId)
                 .Select(s => new ShopDto(s.ShopName, s.ShopPhoneNumber, s.Status, s.ShopAddress, s.Id, s.CreatedAt))
                 .SingleOrDefault());
+    
 }

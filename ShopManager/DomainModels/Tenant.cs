@@ -21,7 +21,6 @@ public class Tenant : BaseDomainModel
     public PaymentStatus PaymentStatus { get; set; }
 
     public ZonedDateTime NextBillingDate { get; set; }
-
     
     public ZonedDateTime SubscriptionStartDate { get; set; }
     

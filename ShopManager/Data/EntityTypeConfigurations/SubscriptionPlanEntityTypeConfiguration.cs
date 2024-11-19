@@ -12,25 +12,9 @@ public class SubscriptionPlanEntityTypeConfiguration : IEntityTypeConfiguration<
         builder.Property(sp => sp.Id)
             .ValueGeneratedOnAdd();
 
-        builder.Property(sp => sp.Name)
-            .IsRequired()
-            .HasMaxLength(100);
-
-        builder.Property(sp => sp.Description)
-            .HasMaxLength(200);
-
-        builder.ComplexProperty(sp => sp.Price)
-            .IsRequired();
-
-        builder.Property(sp => sp.BillingCycle)
-            .IsRequired();
-
         builder.Property(sp => sp.Status)
             .HasDefaultValue(ActivationStatus.INACTIVE)
             .IsRequired();
-
-        builder.Property(sp => sp.Features)
-            .HasMaxLength(500);
 
         builder.Property(sp => sp.CreatedAt)
             .IsRequired();
@@ -41,7 +25,10 @@ public class SubscriptionPlanEntityTypeConfiguration : IEntityTypeConfiguration<
             .IsRequired()
             .OnDelete(DeleteBehavior.NoAction);
         
-        builder.HasIndex(x => x.Name)
-            .IsUnique();
+        builder.HasOne(sp => sp.SubscriptionPlanType)
+            .WithMany(spt => spt.SubscriptionPlans)
+            .HasForeignKey(sp => sp.SubscriptionPlanTypeId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.NoAction);
     }
 }

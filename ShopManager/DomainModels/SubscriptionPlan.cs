@@ -2,17 +2,11 @@ namespace ShopManager.DomainModels;
 
 public class SubscriptionPlan : BaseDomainModel
 {
-    public string Name { get; set; } = string.Empty;
-    
-    public string Description { get; set; } = string.Empty;
-
-    public Money Price { get; set; } = new(Currency.NGN, 0m);
-
     public ActivationStatus Status { get; set; }
-
-    public BillingCycle BillingCycle { get; set; }
-
-    public string Features { get; set; } = string.Empty;
+    
+    public Guid SubscriptionPlanTypeId { get; set; }
+    
+    public SubscriptionPlanType SubscriptionPlanType { get; set; } = default!;
     
     public Guid TenantId { get; set; }
     
