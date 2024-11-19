@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using ShopManager.DomainModels;
+using ShopManager.Features.Tenants.DomainModels;
 
 namespace ShopManager.Data;
 

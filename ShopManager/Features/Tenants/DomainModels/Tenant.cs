@@ -1,6 +1,7 @@
 using NodaTime;
+using ShopManager.DomainModels;
 
-namespace ShopManager.DomainModels;
+namespace ShopManager.Features.Tenants.DomainModels;
 
 public class Tenant : BaseDomainModel
 {
@@ -9,9 +10,9 @@ public class Tenant : BaseDomainModel
     public string ContactName { get; set; } = string.Empty;
 
     public string EmailAddress { get; set; } = string.Empty;
-    
+
     public string PhoneNumber { get; set; } = string.Empty;
-    
+
     public string Address { get; set; } = string.Empty;
 
     public string BillingAddress { get; set; } = string.Empty;
@@ -21,17 +22,17 @@ public class Tenant : BaseDomainModel
     public PaymentStatus PaymentStatus { get; set; }
 
     public ZonedDateTime NextBillingDate { get; set; }
-    
+
     public ZonedDateTime SubscriptionStartDate { get; set; }
-    
+
     public ZonedDateTime SubscriptionEndDate { get; set; }
     public ICollection<TenantPaymentMethod> PaymentMethods { get; set; } = [];
-    
+
     public ICollection<SubscriptionPlan> SubscriptionPlans { get; set; } = [];
 
     public ICollection<Shop> Shops { get; set; } = [];
-    
+
     public ICollection<TenantInvoice> TenantInvoices { get; set; } = [];
-    
+
     public ICollection<TenantPayment> TenantPayments { get; set; } = [];
 }

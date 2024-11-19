@@ -1,3 +1,5 @@
+using ShopManager.Features.Tenants.DomainModels;
+
 namespace ShopManager.DomainModels;
 
 public class Shop : BaseDomainModel

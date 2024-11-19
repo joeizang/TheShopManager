@@ -40,8 +40,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Tenants\Filters\" />
-    <Folder Include="Features\Tenants\Validations\" />
     <Folder Include="Services\" />
   </ItemGroup>
 

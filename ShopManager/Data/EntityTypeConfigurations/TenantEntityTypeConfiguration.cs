@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ShopManager.DomainModels;
+using ShopManager.Features.Tenants.DomainModels;
 
 namespace ShopManager.Data.EntityTypeConfigurations;
 

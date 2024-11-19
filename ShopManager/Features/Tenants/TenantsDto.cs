@@ -1,6 +1,3 @@
 namespace ShopManager.Features.Tenants;
 
-public class TenantsDto
-{
-    
-}
+public record CreateTenantDto();
