@@ -9,7 +9,10 @@ public class ShopEntityTypeConfiguration : IEntityTypeConfiguration<Shop>
 {
     public void Configure(EntityTypeBuilder<Shop> builder)
     {
+        builder.HasQueryFilter(x => x.IsDeleted == false);
+        
         builder.HasKey(s => s.Id);
+        
         builder.Property(s => s.Id)
             .ValueGeneratedOnAdd();
         
@@ -36,6 +39,12 @@ public class ShopEntityTypeConfiguration : IEntityTypeConfiguration<Shop>
         builder.Property(s => s.ShopLogo)
             .HasMaxLength(500)
             .IsRequired();
+
+        builder.Property(s => s.CacRegistrationNumber)
+            .HasMaxLength(20);
+        
+        builder.Property(s => s.TaxIdentificationNUmber)
+            .HasMaxLength(20);
         
         builder.Property(s => s.Status)
             .IsRequired();

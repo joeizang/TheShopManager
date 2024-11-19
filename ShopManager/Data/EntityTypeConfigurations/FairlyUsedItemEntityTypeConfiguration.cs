@@ -9,7 +9,10 @@ public class FairlyUsedItemEntityTypeConfiguration : IEntityTypeConfiguration<Fa
 {
     public void Configure(EntityTypeBuilder<FairlyUsedItem> builder)
     {
+        builder.HasQueryFilter(x => x.IsDeleted == false);
+        
         builder.HasKey(f => f.Id);
+        
         builder.Property(f => f.Id)
             .ValueGeneratedOnAdd();
         

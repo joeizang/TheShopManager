@@ -1,6 +1,46 @@
-@ShopManager_HostAddress = http://localhost:5013
+@ShopManager_HostAddress = http://localhost:5013/api/v1
 
-GET {{ShopManager_HostAddress}}/api/v1/shops?cursor=2024-11-13T22:51:39.971Z
+GET {{ShopManager_HostAddress}}/shops
 Accept: application/json
 
 ###
+
+GET {{ShopManager_HostAddress}}/shops/all
+Accept: application/json
+
+###
+
+### Create a new shop
+POST {{ShopManager_HostAddress}}/shops/
+Accept: application/json
+Content-Type: application/json
+
+{
+  "ShopName": "Shop 2",
+  "ShopAddress": "Shop 2 Address",
+  "ShopPhoneNumber": "12388767890",
+  "ShopEmail": "shop2email.@bizdevomatics.xyz",
+  "CacRegistrationNumber": "RC123996",
+  "ShopDescription": "Shop 2 Description",
+  "ShopLogo": "Shop 2 Logo",
+  "TaxIdentificationNumber": "TIN5564456"
+}
+
+###
+
+### Update a shop
+PUT {{ShopManager_HostAddress}}/shops/019332c0-3c6d-3467-4a6f-864ddadbad6c
+Accept: application/json
+Content-Type: application/json
+
+{
+  "ShopId": "019332c0-3c6d-3467-4a6f-864ddadbad6c",
+  "ShopName": "Frank's Repair Shop",
+  "ShopAddress": "No 56. RwangPam Street, Jos, Plateau State",
+  "ShopPhoneNumber": "12388767890",
+  "ShopEmailAddress": "shop2email.@franksrepairshop.xyz",
+  "CacRegNumber": "RC123996",
+  "ShopDescription": "We repairs all kinds of computers and sell computers also",
+  "ShopLogo": "Shop 2 Logo",
+  "TaxId": "TIN5564456"
+}

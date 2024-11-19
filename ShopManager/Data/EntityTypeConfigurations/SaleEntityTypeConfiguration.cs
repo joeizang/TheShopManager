@@ -9,7 +9,10 @@ public class SaleEntityTypeConfiguration : IEntityTypeConfiguration<Sale>
 {
     public void Configure(EntityTypeBuilder<Sale> builder)
     {
+        builder.HasQueryFilter(x => x.IsDeleted == false);
+        
         builder.HasKey(s => s.Id);
+        
         builder.Property(s => s.Id)
             .ValueGeneratedOnAdd();
 

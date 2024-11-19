@@ -15,20 +15,23 @@ using ShopManager.DomainModels;
 namespace ShopManager.Migrations
 {
     [DbContext(typeof(ShopManagerBaseContext))]
-    [Migration("20241109221604_AddIndicesForCursorPaging")]
-    partial class AddIndicesForCursorPaging
+    [Migration("20241119123911_SubscriptionPlanUpdates")]
+    partial class SubscriptionPlanUpdates
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.0-rc.2.24474.1")
+                .HasAnnotation("ProductVersion", "9.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
+            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "activation_status", new[] { "active", "deactivated", "inactive", "suspended" });
+            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "billing_cycle", new[] { "monthly", "quarterly", "yearly" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "currency", new[] { "aud", "cad", "cny", "eur", "gbp", "ghs", "gmd", "gnf", "inr", "jpy", "kes", "lrd", "mwk", "mzn", "ngn", "rwf", "sll", "ugx", "usd", "xaf", "xof", "xpf", "zar", "zmw" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "fairlyused_item_condition", new[] { "excellent", "fair", "good", "poor", "very_good" });
-            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "payment_method", new[] { "bank_transfer", "cash", "cheque", "crypto_currency", "mobile_money", "pos", "ussd" });
+            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "payment_method", new[] { "bank_transfer", "cash", "cheque", "crypto_currency", "mobile_money", "not_set", "pos", "ussd" });
+            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "payment_status", new[] { "failed", "pending", "successful", "uninitialized" });
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -709,6 +712,11 @@ namespace ShopManager.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<string>("CacRegistrationNumber")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
                     b.Property<Instant>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -745,12 +753,102 @@ namespace ShopManager.Migrations
                     b.Property<bool>("Status")
                         .HasColumnType("boolean");
 
+                    b.Property<string>("TaxIdentificationNUmber")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid");
+
                     b.Property<Instant>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("TenantId");
+
                     b.ToTable("Shops");
+                });
+
+            modelBuilder.Entity("ShopManager.DomainModels.SubscriptionPlan", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Instant>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<ActivationStatus>("Status")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("activation_status")
+                        .HasDefaultValue(ActivationStatus.INACTIVE);
+
+                    b.Property<Guid>("SubscriptionPlanTypeId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Instant>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SubscriptionPlanTypeId");
+
+                    b.HasIndex("TenantId");
+
+                    b.ToTable("SubscriptionPlan");
+                });
+
+            modelBuilder.Entity("ShopManager.DomainModels.SubscriptionPlanType", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<BillingCycle>("BillingCycle")
+                        .HasColumnType("billing_cycle");
+
+                    b.Property<Instant>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
+                    b.Property<decimal>("Discount")
+                        .HasColumnType("numeric");
+
+                    b.Property<string>("Features")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<Instant>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.ComplexProperty<Dictionary<string, object>>("Price", "ShopManager.DomainModels.SubscriptionPlanType.Price#Money", b1 =>
+                        {
+                            b1.IsRequired();
+
+                            b1.Property<decimal>("amount")
+                                .HasColumnType("numeric");
+
+                            b1.Property<Currency>("currency")
+                                .HasColumnType("currency");
+                        });
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SubscriptionPlanType");
                 });
 
             modelBuilder.Entity("ShopManager.DomainModels.Supplier", b =>
@@ -796,6 +894,217 @@ namespace ShopManager.Migrations
                         .IsUnique();
 
                     b.ToTable("Suppliers");
+                });
+
+            modelBuilder.Entity("ShopManager.DomainModels.Tenant", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("ActivationStatus")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("BillingAddress")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("ContactName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<Instant>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("EmailAddress")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<ZonedDateTime>("NextBillingDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<PaymentStatus>("PaymentStatus")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("payment_status")
+                        .HasDefaultValue(PaymentStatus.UNINITIALIZED);
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<ZonedDateTime>("SubscriptionEndDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<ZonedDateTime>("SubscriptionStartDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Instant>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmailAddress")
+                        .IsUnique();
+
+                    b.ToTable("Tenant");
+                });
+
+            modelBuilder.Entity("ShopManager.DomainModels.TenantInvoice", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<Instant>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
+                    b.Property<ZonedDateTime>("DueDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("InvoiceReference")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Instant>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.ComplexProperty<Dictionary<string, object>>("AmountDue", "ShopManager.DomainModels.TenantInvoice.AmountDue#Money", b1 =>
+                        {
+                            b1.IsRequired();
+
+                            b1.Property<decimal>("amount")
+                                .HasColumnType("numeric");
+
+                            b1.Property<Currency>("currency")
+                                .HasColumnType("currency");
+                        });
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DueDate");
+
+                    b.HasIndex("InvoiceReference")
+                        .IsUnique();
+
+                    b.HasIndex("TenantId");
+
+                    b.ToTable("TenantInvoice");
+                });
+
+            modelBuilder.Entity("ShopManager.DomainModels.TenantPayment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<Instant>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
+                    b.Property<ZonedDateTime>("PaymentDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("PaymentMethodId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("PaymentReference")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<PaymentStatus>("Status")
+                        .HasColumnType("payment_status");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Instant>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.ComplexProperty<Dictionary<string, object>>("AmountPaid", "ShopManager.DomainModels.TenantPayment.AmountPaid#Money", b1 =>
+                        {
+                            b1.IsRequired();
+
+                            b1.Property<decimal>("amount")
+                                .HasColumnType("numeric");
+
+                            b1.Property<Currency>("currency")
+                                .HasColumnType("currency");
+                        });
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PaymentDate");
+
+                    b.HasIndex("PaymentMethodId");
+
+                    b.HasIndex("PaymentReference");
+
+                    b.HasIndex("TenantId");
+
+                    b.ToTable("TenantPayment");
+                });
+
+            modelBuilder.Entity("ShopManager.DomainModels.TenantPaymentMethod", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<Instant>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsDefaultPaymentMethod")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("PaymentDetails")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
+                    b.Property<PaymentMethod>("PaymentMethod")
+                        .HasColumnType("payment_method");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Instant>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TenantId");
+
+                    b.ToTable("TenantPaymentMethod");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -1043,6 +1352,36 @@ namespace ShopManager.Migrations
                     b.Navigation("Shop");
                 });
 
+            modelBuilder.Entity("ShopManager.DomainModels.Shop", b =>
+                {
+                    b.HasOne("ShopManager.DomainModels.Tenant", "Tenant")
+                        .WithMany("Shops")
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("ShopManager.DomainModels.SubscriptionPlan", b =>
+                {
+                    b.HasOne("ShopManager.DomainModels.SubscriptionPlanType", "SubscriptionPlanType")
+                        .WithMany("SubscriptionPlans")
+                        .HasForeignKey("SubscriptionPlanTypeId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("ShopManager.DomainModels.Tenant", "Tenant")
+                        .WithMany("SubscriptionPlans")
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("SubscriptionPlanType");
+
+                    b.Navigation("Tenant");
+                });
+
             modelBuilder.Entity("ShopManager.DomainModels.Supplier", b =>
                 {
                     b.HasOne("ShopManager.DomainModels.Shop", "Shop")
@@ -1052,6 +1391,47 @@ namespace ShopManager.Migrations
                         .IsRequired();
 
                     b.Navigation("Shop");
+                });
+
+            modelBuilder.Entity("ShopManager.DomainModels.TenantInvoice", b =>
+                {
+                    b.HasOne("ShopManager.DomainModels.Tenant", "Tenant")
+                        .WithMany("TenantInvoices")
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("ShopManager.DomainModels.TenantPayment", b =>
+                {
+                    b.HasOne("ShopManager.DomainModels.TenantPaymentMethod", "PaymentMethod")
+                        .WithMany("TenantPayments")
+                        .HasForeignKey("PaymentMethodId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("ShopManager.DomainModels.Tenant", "Tenant")
+                        .WithMany("TenantPayments")
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("PaymentMethod");
+
+                    b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("ShopManager.DomainModels.TenantPaymentMethod", b =>
+                {
+                    b.HasOne("ShopManager.DomainModels.Tenant", "Tenant")
+                        .WithMany("PaymentMethods")
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("ShopManager.DomainModels.Customer", b =>
@@ -1071,9 +1451,32 @@ namespace ShopManager.Migrations
                     b.Navigation("SaleItems");
                 });
 
+            modelBuilder.Entity("ShopManager.DomainModels.SubscriptionPlanType", b =>
+                {
+                    b.Navigation("SubscriptionPlans");
+                });
+
             modelBuilder.Entity("ShopManager.DomainModels.Supplier", b =>
                 {
                     b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("ShopManager.DomainModels.Tenant", b =>
+                {
+                    b.Navigation("PaymentMethods");
+
+                    b.Navigation("Shops");
+
+                    b.Navigation("SubscriptionPlans");
+
+                    b.Navigation("TenantInvoices");
+
+                    b.Navigation("TenantPayments");
+                });
+
+            modelBuilder.Entity("ShopManager.DomainModels.TenantPaymentMethod", b =>
+                {
+                    b.Navigation("TenantPayments");
                 });
 #pragma warning restore 612, 618
         }

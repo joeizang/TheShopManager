@@ -9,7 +9,10 @@ public class InventoryEntityTypeConfiguration : IEntityTypeConfiguration<Invento
 {
     public void Configure(EntityTypeBuilder<Inventory> builder)
     {
+        builder.HasQueryFilter(x => x.IsDeleted == false);
+        
         builder.HasKey(i => i.Id);
+        
         builder.Property(i => i.Id)
             .ValueGeneratedOnAdd();
 

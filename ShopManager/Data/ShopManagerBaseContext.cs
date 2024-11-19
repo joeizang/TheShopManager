@@ -22,5 +22,11 @@ public class ShopManagerBaseContext(DbContextOptions options) : IdentityDbContex
     public DbSet<Sale> Sales { get; set; } = default!;
     public DbSet<SaleItem> SaleItems { get; set; } = default!;
     public DbSet<Payment> Payments { get; set; } = default!;
+    public DbSet<Tenant> Tenants { get; set; } = default!;
+    public DbSet<TenantInvoice> TenantInvoices { get; set; } = default!;
+    public DbSet<TenantPayment> TenantPayments { get; set; } = default!;
+    public DbSet<TenantPaymentMethod> TenantPaymentMethods { get; set; } = default!;
+    public DbSet<SubscriptionPlan> SubscriptionPlans { get; set; } = default!;
+    public DbSet<SubscriptionPlanType> SubscriptionPlanTypes { get; set; } = default!;
     
 }
