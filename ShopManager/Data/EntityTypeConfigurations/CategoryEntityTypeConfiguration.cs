@@ -9,6 +9,7 @@ public class CategoryEntityTypeConfiguration : IEntityTypeConfiguration<Category
 {
     public void Configure(EntityTypeBuilder<Category> builder)
     {
+        builder.HasQueryFilter(x => x.IsDeleted == false);
         builder.HasKey(x => x.Id);
         builder.Property(x => x.CategoryName).IsRequired();
         builder.Property(x => x.CategoryDescription).IsRequired();

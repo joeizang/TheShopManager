@@ -8,7 +8,10 @@ public class SubscriptionPlanEntityTypeConfiguration : IEntityTypeConfiguration<
 {
     public void Configure(EntityTypeBuilder<SubscriptionPlan> builder)
     {
+        builder.HasQueryFilter(x => x.IsDeleted == false);
+        
         builder.HasKey(sp => sp.Id);
+        
         builder.Property(sp => sp.Id)
             .ValueGeneratedOnAdd();
 

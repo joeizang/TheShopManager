@@ -8,7 +8,10 @@ public class TenantEntityTypeConfiguration : IEntityTypeConfiguration<Tenant>
 {
     public void Configure(EntityTypeBuilder<Tenant> builder)
     {
+        builder.HasQueryFilter(x => x.IsDeleted == false);
+        
         builder.HasKey(t => t.Id);
+        
         builder.Property(t => t.Id)
             .ValueGeneratedOnAdd();
 

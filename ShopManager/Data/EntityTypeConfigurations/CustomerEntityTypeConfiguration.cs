@@ -9,6 +9,8 @@ public class CustomerEntityTypeConfiguration : IEntityTypeConfiguration<Customer
 {
     public void Configure(EntityTypeBuilder<Customer> builder)
     {
+        builder.HasQueryFilter(x => x.IsDeleted == false);
+        
         builder.HasKey(x => x.Id);
 
         builder.Property(s => s.Id)

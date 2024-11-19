@@ -8,7 +8,10 @@ public class TenantInvoiceEntityTypeConfiguration : IEntityTypeConfiguration<Ten
 {
     public void Configure(EntityTypeBuilder<TenantInvoice> builder)
     {
+        builder.HasQueryFilter(x => x.IsDeleted == false);
+        
         builder.HasKey(x => x.Id);
+        
         builder.Property(x => x.Id)
             .ValueGeneratedNever();
         builder.Property(x => x.DueDate)

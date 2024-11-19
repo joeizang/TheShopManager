@@ -8,7 +8,10 @@ public class TenantPaymentMethodEntityTypeConfiguration : IEntityTypeConfigurati
 {
     public void Configure(EntityTypeBuilder<TenantPaymentMethod> builder)
     {
+        builder.HasQueryFilter(x => x.IsDeleted == false);
+        
         builder.HasKey(x => x.Id);
+        
         builder.Property(x => x.Id)
             .ValueGeneratedNever();
         builder.Property(x => x.PaymentDetails)

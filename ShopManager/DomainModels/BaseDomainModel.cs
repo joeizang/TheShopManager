@@ -10,6 +10,8 @@ public class BaseDomainModel
 
     public Instant UpdatedAt { get; set; }
 
+    public bool IsDeleted { get; set; }
+
     public BaseDomainModel()
     {
         Id = Ulid.NewUlid().ToGuid();

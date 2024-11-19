@@ -9,7 +9,10 @@ public class ShopEntityTypeConfiguration : IEntityTypeConfiguration<Shop>
 {
     public void Configure(EntityTypeBuilder<Shop> builder)
     {
+        builder.HasQueryFilter(x => x.IsDeleted == false);
+        
         builder.HasKey(s => s.Id);
+        
         builder.Property(s => s.Id)
             .ValueGeneratedOnAdd();
         

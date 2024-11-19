@@ -8,7 +8,10 @@ public class SubscriptionPlanTypeEntityTypeConfiguration : IEntityTypeConfigurat
 {
     public void Configure(EntityTypeBuilder<SubscriptionPlanType> builder)
     {
+        builder.HasQueryFilter(x => x.IsDeleted == false);
+
         builder.HasKey(x => x.Id);
+        
         builder.Property(x => x.Id)
             .ValueGeneratedNever();
         builder.Property(x => x.Name)
@@ -22,6 +25,7 @@ public class SubscriptionPlanTypeEntityTypeConfiguration : IEntityTypeConfigurat
         builder.Property(x => x.BillingCycle)
             .IsRequired();
         builder.Property(x => x.Discount);
+        
         builder.Property(x => x.Features)
             .HasMaxLength(1000)
             .IsRequired();
