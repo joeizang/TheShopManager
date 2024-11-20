@@ -40,6 +40,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Features\Sales\Filters\" />
+    <Folder Include="Features\Sales\Validations\" />
     <Folder Include="Services\" />
   </ItemGroup>
 

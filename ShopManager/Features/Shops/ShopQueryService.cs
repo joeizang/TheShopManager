@@ -29,5 +29,11 @@ public class ShopQueryService
                 .Where(x => x.Id == shopId)
                 .Select(s => new ShopDto(s.ShopName, s.ShopPhoneNumber, s.Status, s.ShopAddress, s.Id, s.CreatedAt))
                 .SingleOrDefault());
-    
+    public static readonly Func<ShopManagerBaseContext, Guid, IAsyncEnumerable<ShopDto>>
+        GetTenantShops = EF.CompileAsyncQuery((ShopManagerBaseContext db, Guid tenantId) => 
+            db.Shops.AsNoTracking()
+                .Where(x => x.TenantId == tenantId)
+                .OrderByDescending(x => x.CreatedAt)
+                .Select(s => new ShopDto(s.ShopName, s.ShopPhoneNumber, s.Status, s.ShopAddress, s.Id, s.CreatedAt))
+                .Take(10));
 }

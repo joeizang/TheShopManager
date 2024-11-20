@@ -23,4 +23,12 @@ public class ShopsCommandService(ShopManagerBaseContext context) : IShopCommandS
         await _context.SaveChangesAsync();
         return shop.MapToShopDto();
     }
+    
+    public async Task DeleteShop(Guid shopId)
+    {
+        var shop = await _context.Shops.FindAsync(shopId);
+        shop.IsDeleted = true;
+        _context.Entry(shop).State = EntityState.Modified;
+        await _context.SaveChangesAsync();
+    }
 }
