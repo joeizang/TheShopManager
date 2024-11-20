@@ -1,6 +1,6 @@
 namespace ShopManager.Features.Tenants;
 
-public class ITenantCommandService
+public interface ITenantCommandService
 {
-    
+    Task<TenantDto> CreateTenant(CreateTenantDto inputModel);
 }
