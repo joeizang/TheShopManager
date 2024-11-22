@@ -15,9 +15,9 @@ public class ApplicationUser : IdentityUser
 
     public string Address { get; set; } = string.Empty;
 
-    public ZonedDateTime CreatedAt { get; set; } = SystemClock.Instance.GetCurrentInstant().InUtc();
+    public Instant CreatedAt { get; set; } = SystemClock.Instance.GetCurrentInstant();
 
-    public ZonedDateTime UpdatedAt { get; set; }
+    public Instant UpdatedAt { get; set; }
 
 
 }

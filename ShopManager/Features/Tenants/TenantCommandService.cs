@@ -6,8 +6,11 @@ public class TenantCommandService(ShopManagerBaseContext contextI) : ITenantComm
 {
     private readonly ShopManagerBaseContext _contextI = contextI;
 
-    public Task<TenantDto> CreateTenant(CreateTenantDto inputModel)
+    public async Task<TenantDto> CreateTenant(CreateTenantDto inputModel)
     {
-        
+        var tenant = inputModel.MapToTenant();
+        _contextI.Tenants.Add(tenant);
+        await _contextI.SaveChangesAsync().ConfigureAwait(false);
+        return tenant.MapToTenantDto();
     }
 }

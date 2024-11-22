@@ -44,3 +44,54 @@ Content-Type: application/json
   "ShopLogo": "Shop 2 Logo",
   "TaxId": "TIN5564456"
 }
+
+###
+
+### Delete a shop
+DELETE {{ShopManager_HostAddress}}/shops/019332c0-3c6d-3467-4a6f-864ddadbad6c
+Accept: application/json
+Content-Type: application/json
+
+{
+    "ShopId": "019332c0-3c6d-3467-4a6f-864ddadbad6c"
+}
+
+###
+
+### Get Tenants
+GET {{ShopManager_HostAddress}}/tenants
+Accept: application/json
+
+###
+
+### Create a new tenant
+POST {{ShopManager_HostAddress}}/tenants/
+Accept: application/json
+Content-Type: application/json
+
+{
+  "Name": "Franklyn Maduka",
+  "ContactName": "Franklyn Maduka",
+  "EmailAddress": "franksplace@bizdevomatics.xyz",
+  "PhoneNumber": "08034567890",
+  "Address": "Rwang Pam street, Jos, Plateau State",
+  "BillingAddress": "Rwang Pam street, Jos, Plateau State",
+  "ActivationStatus": false,
+  "NextBillingDate": "2024-12-21T23:06:57.174Z",
+  "SubscriptionStartDate": "2024-09-21T23:06:57.174Z",
+  "SubscriptionEndDate": "2024-11-19T23:06:57.174Z",
+  "PaymentStatus": 1
+}
+
+###
+
+### Delete a tenant
+DELETE {{ShopManager_HostAddress}}/tenants/0193513a-e90c-7da9-f6ae-c26f99f1a5ad
+Accept: application/json
+Content-Type: application/json
+
+{
+    "TenantId": "0193513a-e90c-7da9-f6ae-c26f99f1a5ad"
+}
+
+###

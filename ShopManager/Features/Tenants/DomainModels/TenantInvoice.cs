@@ -5,7 +5,7 @@ namespace ShopManager.Features.Tenants.DomainModels;
 
 public class TenantInvoice : BaseDomainModel
 {
-    public ZonedDateTime DueDate { get; set; }
+    public Instant DueDate { get; set; }
 
     public Money AmountDue { get; set; } = new(Currency.NGN, 0m);
 
@@ -13,7 +13,7 @@ public class TenantInvoice : BaseDomainModel
 
     public string Description { get; set; } = string.Empty;
 
-    public InvoiceStatus Status { get; set; }
+    public InvoiceStatus InvoiceStatus { get; set; } = InvoiceStatus.NOT_PAYED;
 
     public Guid TenantId { get; set; }
 

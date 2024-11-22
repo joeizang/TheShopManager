@@ -5,7 +5,7 @@ namespace ShopManager.Features.Tenants.DomainModels;
 
 public class TenantPayment : BaseDomainModel
 {
-    public ZonedDateTime PaymentDate { get; set; }
+    public Instant PaymentDate { get; set; }
 
     public Money AmountPaid { get; set; } = new(Currency.NGN, 0m);
 

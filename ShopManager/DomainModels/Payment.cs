@@ -14,7 +14,7 @@ public class Payment : BaseDomainModel
 
     public Money AmountPaid { get; set; } = new(Currency.NGN, 0m);
 
-    public ZonedDateTime PaymentDate { get; set; }
+    public Instant PaymentDate { get; set; }
 
     public PaymentMethod PaymentMethod { get; set; }
 

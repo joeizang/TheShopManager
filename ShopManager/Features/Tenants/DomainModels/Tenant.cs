@@ -21,11 +21,11 @@ public class Tenant : BaseDomainModel
 
     public PaymentStatus PaymentStatus { get; set; }
 
-    public ZonedDateTime NextBillingDate { get; set; }
+    public Instant NextBillingDate { get; set; }
 
-    public ZonedDateTime SubscriptionStartDate { get; set; }
+    public Instant SubscriptionStartDate { get; set; }
 
-    public ZonedDateTime SubscriptionEndDate { get; set; }
+    public Instant SubscriptionEndDate { get; set; }
     public ICollection<TenantPaymentMethod> PaymentMethods { get; set; } = [];
 
     public ICollection<SubscriptionPlan> SubscriptionPlans { get; set; } = [];

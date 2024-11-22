@@ -14,7 +14,7 @@ public class FairlyUsedItem : BaseDomainModel
 
     public Product Product { get; set; } = default!;
 
-    public ZonedDateTime DateBought { get; set; }
+    public Instant DateBought { get; set; }
 
     public string UserId { get; set; } = string.Empty;
 

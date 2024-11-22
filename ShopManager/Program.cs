@@ -3,11 +3,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
 using NodaTime.Serialization.SystemTextJson;
+using NodaTime.Text;
 using ShopManager.Data;
 using ShopManager.DomainModels;
 using ShopManager.Features.Products;
 using ShopManager.Features.Shops;
 using ShopManager.Features.Shops.Validations;
+using ShopManager.Features.Tenants;
 
 var builder = WebApplication.CreateBuilder(args);
 Console.WriteLine(Ulid.NewUlid().ToGuid());
@@ -26,6 +28,7 @@ builder.Services.AddDbContext<ShopManagerBaseContext>(opt =>
         opt.MapEnum<PaymentStatus>("payment_status");
         opt.MapEnum<BillingCycle>("billing_cycle");
         opt.MapEnum<FairlyUsedItemCondition>("fairlyused_item_condition");
+        opt.MapEnum<InvoiceStatus>("invoice_status");
     });
     opt.EnableSensitiveDataLogging();
 });
@@ -33,12 +36,15 @@ builder.Services.AddDbContext<ShopManagerBaseContext>(opt =>
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
     options.SerializerOptions.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb);
+    options.SerializerOptions.Converters.Add(
+        new NodaPatternConverter<ZonedDateTime>(ZonedDateTimePattern.ExtendedFormatOnlyIso));
 });
 
 builder.Services.AddScoped<ShopQueryService>();
 builder.Services.AddScoped<IValidator<CreateShopDto>, ValidateCreateShopDto>();
 builder.Services.AddScoped<IValidator<UpdateShopDto>, ValidateUpdateShopDto>();
 builder.Services.AddScoped<IShopCommandService, ShopsCommandService>();
+builder.Services.AddScoped<ITenantCommandService, TenantCommandService>();
 builder.Services.AddIdentityApiEndpoints<ApplicationUser>()
     .AddEntityFrameworkStores<ShopManagerBaseContext>()
     .AddApiEndpoints();
@@ -58,5 +64,6 @@ app.UseHttpsRedirection();
 app.MapIdentityApi<ApplicationUser>();
 app.MapShopEndpoints();
 app.MapProductsEndpoints();
+app.MapTenantEndpoints();
 
 app.Run();

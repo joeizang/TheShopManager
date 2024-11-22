@@ -7,5 +7,7 @@
         public const int MAXLENGTHFORDESCRIPTIONS = 500;
         public const int MAXLENGTHFORURLS = 1024;
         public const int MAXLENGTHFORPHONE = 33;
+        
+        public const string V1 = "/api/v1";
     }
 }

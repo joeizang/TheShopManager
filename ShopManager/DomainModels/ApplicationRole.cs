@@ -12,7 +12,7 @@ public class ApplicationRole : IdentityRole
 
     public bool ElevatedUser { get; set; }
 
-    public ZonedDateTime CreatedAt { get; set; } = SystemClock.Instance.GetCurrentInstant().InUtc();
+    public Instant CreatedAt { get; set; } = SystemClock.Instance.GetCurrentInstant();
 
-    public ZonedDateTime UpdatedAt { get; set; }
+    public Instant UpdatedAt { get; set; }
 }

@@ -2,7 +2,7 @@ namespace ShopManager.DomainModels;
 
 public enum PaymentMethod
 {
-    NOT_SET,
+    NOT_SET = 10,
     CASH,
     POS,
     BANK_TRANSFER,
@@ -14,8 +14,8 @@ public enum PaymentMethod
 
 public enum PaymentStatus
 {
+    UNINITIALIZED = 1,
     PENDING,
     SUCCESSFUL,
-    FAILED,
-    UNINITIALIZED
+    FAILED
 }
