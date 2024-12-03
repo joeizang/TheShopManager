@@ -64,6 +64,9 @@ Accept: application/json
 
 ###
 
+### Get next n Tenants cursored by createdAt Instant
+GET {{ShopManager_HostAddress}}/
+
 ### Create a new tenant
 POST {{ShopManager_HostAddress}}/tenants/
 Accept: application/json
