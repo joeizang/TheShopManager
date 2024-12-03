@@ -22,9 +22,14 @@ public static class TenantsEndpoint
             .Produces(400)
             .Produces(500);
 
-        tenantGroupWithId.MapDelete("", async (ShopManagerBaseContext context, [FromBody] DeleteTenantDto dto) =>
+        tenantGroupWithId.MapGet("", EndpointHandlers.GetTenantByIdAsync)
+            .Produces<TenantDto>(200)
+            .Produces(404)
+            .Produces(500);
+
+        tenantGroupWithId.MapDelete("", async (Guid tenantId, [FromServices] ShopManagerBaseContext context) =>
         {
-            var target = await context.Tenants.FindAsync(dto.TenantId).ConfigureAwait(false);
+            var target = await context.Tenants.FindAsync(tenantId).ConfigureAwait(false);
             if (target is null)
             {
                 return Results.NotFound();

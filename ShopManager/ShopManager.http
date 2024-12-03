@@ -88,6 +88,12 @@ Content-Type: application/json
 
 ###
 
+### Get a tenant
+GET {{ShopManager_HostAddress}}/tenants/0193517b-4392-0f51-e4cc-e3d6679c4951
+Accept: application/json
+
+###
+
 ### Delete a tenant
 DELETE {{ShopManager_HostAddress}}/tenants/0193513a-e90c-7da9-f6ae-c26f99f1a5ad
 Accept: application/json

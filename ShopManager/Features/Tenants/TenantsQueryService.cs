@@ -23,4 +23,13 @@ public static class TenantsQueryService
                         t.SubscriptionStartDate, t.NextBillingDate, t.ActivationStatus, t.BillingAddress, t.Address,
                         t.PhoneNumber, t.EmailAddress, t.ContactName))
                     .Take(10));
+    
+    public static readonly Func<ShopManagerBaseContext, Guid, Task<TenantDto?>>
+        GetTenantById = EF.CompileAsyncQuery(
+            (ShopManagerBaseContext context, Guid tenantId) => 
+                context.Tenants.AsNoTracking().Where(x => x.Id.Equals(tenantId))
+                    .Select(t => new TenantDto(t.Name, t.PaymentStatus, t.SubscriptionEndDate,
+                        t.SubscriptionStartDate, t.NextBillingDate, t.ActivationStatus, t.BillingAddress, t.Address,
+                        t.PhoneNumber, t.EmailAddress, t.ContactName))
+                    .SingleOrDefault());
 }

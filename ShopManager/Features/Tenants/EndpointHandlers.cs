@@ -21,6 +21,19 @@ public static class EndpointHandlers
             return Results.InternalServerError();
         }
     }
+
+    public static async Task<IResult> GetTenantByIdAsync(Guid tenantId, [FromServices] ShopManagerBaseContext context)
+    {
+        try
+        {
+            var tenant = await TenantsQueryService.GetTenantById(context, tenantId);
+            return tenant is not null ? Results.Ok(tenant) : Results.NotFound();
+        }
+        catch (Exception e)
+        {
+            return Results.InternalServerError();
+        }
+    }
     
     public static async Task<IResult> GetTenants([FromServices] ShopManagerBaseContext context)
     {
@@ -32,8 +45,7 @@ public static class EndpointHandlers
         return Results.Ok(result);
     }
 
-    public static async Task<IResult> GetCursoredTenants([FromServices] ShopManagerBaseContext context,
-    Instant cursor)
+    public static async Task<IResult> GetCursoredTenants(Instant cursor, [FromServices] ShopManagerBaseContext context)
     {
         var result = new List<TenantDto>();
         await foreach(var tenant in TenantsQueryService.GetCursoredTenants(context, cursor))
