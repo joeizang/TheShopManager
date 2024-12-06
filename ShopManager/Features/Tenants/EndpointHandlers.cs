@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using NodaTime;
 using NodaTime.Text;
 using ShopManager.Data;
+using ShopManager.Features.Tenants.Abstractions;
 
 namespace ShopManager.Features.Tenants;
 
@@ -13,12 +14,12 @@ public static class EndpointHandlers
         try
         {
             var result = await command.CreateTenant(inputModel).ConfigureAwait(false);
-            return Results.Created();
+            return TypedResults.Created();
         }
         catch (Exception e)
         {
             // Log the exception
-            return Results.InternalServerError();
+            return TypedResults.InternalServerError();
         }
     }
 
@@ -27,11 +28,11 @@ public static class EndpointHandlers
         try
         {
             var tenant = await TenantsQueryService.GetTenantById(context, tenantId);
-            return tenant is not null ? Results.Ok(tenant) : Results.NotFound();
+            return tenant is not null ? TypedResults.Ok(tenant) : TypedResults.NotFound();
         }
         catch (Exception e)
         {
-            return Results.InternalServerError();
+            return TypedResults.InternalServerError();
         }
     }
     
@@ -42,16 +43,33 @@ public static class EndpointHandlers
         {
             result.Add(tenant);
         }
-        return Results.Ok(result);
+        return TypedResults.Ok(result);
     }
 
-    public static async Task<IResult> GetCursoredTenants(Instant cursor, [FromServices] ShopManagerBaseContext context)
+    public static async Task<IResult> GetCursoredTenants([FromQuery] string cursor, [FromServices] ShopManagerBaseContext context)
     {
+        if (InstantPattern.ExtendedIso.Parse(cursor.ToString()) is not { Success: true, Value: var parsedCursor })
+        {
+            return Results.BadRequest("Invalid cursor");
+        }
         var result = new List<TenantDto>();
-        await foreach(var tenant in TenantsQueryService.GetCursoredTenants(context, cursor))
+        await foreach(var tenant in TenantsQueryService.GetCursoredTenants(context, parsedCursor))
         {
             result.Add(tenant);
         }
-        return Results.Ok(result);
+        return TypedResults.Ok(result);
+    }
+    
+    public static async Task<IResult> DeleteTenant(Guid tenantId, [FromServices] ITenantCommandService command)
+    {
+        try
+        {
+            var result = await command.DeleteTenant(tenantId).ConfigureAwait(false);
+            return result;
+        }
+        catch (Exception e)
+        {
+            return TypedResults.InternalServerError();
+        }
     }
 }

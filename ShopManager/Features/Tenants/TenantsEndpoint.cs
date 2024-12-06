@@ -27,18 +27,7 @@ public static class TenantsEndpoint
             .Produces(404)
             .Produces(500);
 
-        tenantGroupWithId.MapDelete("", async (Guid tenantId, [FromServices] ShopManagerBaseContext context) =>
-        {
-            var target = await context.Tenants.FindAsync(tenantId).ConfigureAwait(false);
-            if (target is null)
-            {
-                return Results.NotFound();
-            }
-            
-            context.Tenants.Remove(target);
-            await context.SaveChangesAsync().ConfigureAwait(false);
-            return Results.NoContent();
-        })
+        tenantGroupWithId.MapDelete("", EndpointHandlers.DeleteTenant)
         .AddEndpointFilter<FilterDeleteTenant>()
         .Produces(204)
         .Produces(400);

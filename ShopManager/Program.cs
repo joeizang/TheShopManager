@@ -10,6 +10,8 @@ using ShopManager.Features.Products;
 using ShopManager.Features.Shops;
 using ShopManager.Features.Shops.Validations;
 using ShopManager.Features.Tenants;
+using ShopManager.Features.Tenants.Abstractions;
+using ShopManager.Features.Tenants.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 Console.WriteLine(Ulid.NewUlid().ToGuid());
@@ -45,6 +47,7 @@ builder.Services.AddScoped<IValidator<CreateShopDto>, ValidateCreateShopDto>();
 builder.Services.AddScoped<IValidator<UpdateShopDto>, ValidateUpdateShopDto>();
 builder.Services.AddScoped<IShopCommandService, ShopsCommandService>();
 builder.Services.AddScoped<ITenantCommandService, TenantCommandService>();
+builder.Services.AddScoped<ISubscriptionPlan, SubscriptionPlanService>();
 builder.Services.AddIdentityApiEndpoints<ApplicationUser>()
     .AddEntityFrameworkStores<ShopManagerBaseContext>()
     .AddApiEndpoints();
