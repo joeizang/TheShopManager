@@ -18,6 +18,8 @@ public class FairlyUsedItemEntityTypeConfiguration : IEntityTypeConfiguration<Fa
         
         builder.Property(f => f.DateBought)
             .IsRequired();
+        
+        builder.Property(x => x.Version).IsRowVersion();
 
         builder.Property(f => f.ItemName)
             .HasMaxLength(100)

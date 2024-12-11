@@ -23,6 +23,8 @@ public class TenantEntityTypeConfiguration : IEntityTypeConfiguration<Tenant>
         builder.Property(t => t.BillingAddress)
             .HasMaxLength(200);
         
+        builder.Property(x => x.Version).IsRowVersion();
+        
         builder.Property(t => t.Address)
             .HasMaxLength(200);
 

@@ -32,4 +32,15 @@ public static class TenantsQueryService
                         t.SubscriptionStartDate, t.NextBillingDate, t.ActivationStatus, t.BillingAddress, t.Address,
                         t.PhoneNumber, t.EmailAddress, t.ContactName))
                     .SingleOrDefault());
+    
+    public static readonly Func<ShopManagerBaseContext, Guid, IAsyncEnumerable<SubscriptionPlanDto>>
+        GetSubscriptionPlanForTenant = EF.CompileAsyncQuery(
+                (ShopManagerBaseContext context, Guid tenantId) => 
+                context.SubscriptionPlans.AsNoTracking()
+                    .Include(s => s.SubscriptionPlanType)
+                    .Where(s => s.TenantId.Equals(tenantId))
+                    .Select(s => new SubscriptionPlanDto(
+                        s.TenantId, s.Tenant.Name, s.SubscriptionPlanTypeId, s.SubscriptionPlanType.Name,
+                        s.SubscriptionPlanType.Price.Amount, s.SubscriptionPlanType.Price.Currency,
+                        s.SubscriptionPlanType.BillingCycle, s.Status)));
 }

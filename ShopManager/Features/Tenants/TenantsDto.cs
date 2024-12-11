@@ -27,7 +27,8 @@ public record CreateSubscriptionPlanTypeDto(string Name, string Description, dec
 
 public record UpdateSubscriptionPlanDto(Guid SubscriptionPlanTypeId, Guid TenantId, Guid SubscriptionPlanId);
 
-public record SubscriptionPlanDto(Guid TenantId, Guid SubscriptionPlanTypeId, string SubscriptionPlanTypeName,
-    Money Price, BillingCycle BillingCycle, ActivationStatus Status);
+public record SubscriptionPlanDto(Guid TenantId, string TenantName, Guid SubscriptionPlanTypeId, 
+    string SubscriptionPlanTypeName, decimal Price, Currency PaymentCurrency,
+    BillingCycle BillingCycle, ActivationStatus Status);
 
 public record CreateSubscriptionPlanDto(Guid TenantId, Guid SubscriptionPlanTypeId);    

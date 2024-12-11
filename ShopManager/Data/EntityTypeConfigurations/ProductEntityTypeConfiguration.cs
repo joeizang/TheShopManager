@@ -23,6 +23,8 @@ public class ProductEntityTypeConfiguration : IEntityTypeConfiguration<Product>
         builder.Property(p => p.ProductDescription)
             .IsRequired()
             .HasMaxLength(500);
+        
+        builder.Property(x => x.Version).IsRowVersion();
 
         builder.Property(p => p.Sku)
             .IsRequired()

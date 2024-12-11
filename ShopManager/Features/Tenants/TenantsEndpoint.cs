@@ -15,6 +15,10 @@ public static class TenantsEndpoint
         
         tenantGroup.MapGet("/all", EndpointHandlers.GetTenants);
         tenantGroup.MapGet("", EndpointHandlers.GetCursoredTenants);
+        tenantGroupWithId.MapGet("/subscriptionplans", EndpointHandlers.GetSubscriptionPlansForTenant)
+            .Produces<SubscriptionPlanDto>(200)
+            .Produces(404)
+            .Produces(500);
 
         tenantGroup.MapPost("", EndpointHandlers.CreateTenant)
             .AddEndpointFilter<FilterCreateTenant>()

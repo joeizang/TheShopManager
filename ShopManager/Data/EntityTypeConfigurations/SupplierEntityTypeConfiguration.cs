@@ -22,6 +22,8 @@ public class SupplierEntityTypeConfiguration : IEntityTypeConfiguration<Supplier
 
         builder.Property(s => s.SupplierEmailAddress)
             .HasMaxLength(100);
+        
+        builder.Property(x => x.Version).IsRowVersion();
 
         builder.Property(s => s.SupplierPhoneNumber)
             .IsRequired()

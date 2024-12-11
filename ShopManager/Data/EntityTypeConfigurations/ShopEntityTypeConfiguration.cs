@@ -20,6 +20,8 @@ public class ShopEntityTypeConfiguration : IEntityTypeConfiguration<Shop>
             .HasMaxLength(100)
             .IsRequired();
         
+        builder.Property(x => x.Version).IsRowVersion();
+        
         builder.Property(s => s.ShopDescription)
             .HasMaxLength(500)
             .IsRequired();

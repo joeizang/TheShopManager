@@ -21,6 +21,9 @@ public class TenantInvoiceEntityTypeConfiguration : IEntityTypeConfiguration<Ten
         builder.Property(x => x.InvoiceReference)
             .HasMaxLength(100)
             .IsRequired();
+        
+        builder.Property(x => x.Version).IsRowVersion();
+        
         builder.Property(x => x.Description)
             .HasMaxLength(300)
             .IsRequired();

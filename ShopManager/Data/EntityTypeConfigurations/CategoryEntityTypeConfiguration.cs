@@ -17,6 +17,7 @@ public class CategoryEntityTypeConfiguration : IEntityTypeConfiguration<Category
             .WithMany()
             .HasForeignKey(x => x.ShopId)
             .OnDelete(DeleteBehavior.NoAction);
+        builder.Property(x => x.Version).IsRowVersion();
         
         builder.HasIndex(x => x.ShopId);
         builder.HasIndex(x => x.CategoryName);

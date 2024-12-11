@@ -20,6 +20,9 @@ public class SubscriptionPlanTypeEntityTypeConfiguration : IEntityTypeConfigurat
         builder.Property(x => x.Description)
             .HasMaxLength(300)
             .IsRequired();
+        
+        builder.Property(x => x.Version).IsRowVersion();
+        
         builder.ComplexProperty(x => x.Price)
             .IsRequired();
         builder.Property(x => x.BillingCycle)

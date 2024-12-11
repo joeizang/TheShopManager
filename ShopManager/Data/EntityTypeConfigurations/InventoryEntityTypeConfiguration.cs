@@ -18,6 +18,8 @@ public class InventoryEntityTypeConfiguration : IEntityTypeConfiguration<Invento
 
         builder.Property(i => i.QuantityInStock)
             .IsRequired();
+        
+        builder.Property(x => x.Version).IsRowVersion();
 
         builder.Property(i => i.ReOrderLevel)
             .IsRequired();

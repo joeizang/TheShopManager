@@ -114,8 +114,12 @@ public static class TenantsExtensions
     
     public static SubscriptionPlanDto MapSubscriptionPlanToDto(this SubscriptionPlan subscriptionPlan)
     {
-        return new SubscriptionPlanDto(TenantId: subscriptionPlan.TenantId, SubscriptionPlanTypeId: subscriptionPlan.SubscriptionPlanTypeId,
-            SubscriptionPlanTypeName: subscriptionPlan.SubscriptionPlanType.Name, Price: subscriptionPlan.SubscriptionPlanType.Price,
-            BillingCycle: subscriptionPlan.SubscriptionPlanType.BillingCycle, Status: subscriptionPlan.Status);
+        return new SubscriptionPlanDto(TenantId: subscriptionPlan.TenantId, 
+            SubscriptionPlanTypeId: subscriptionPlan.SubscriptionPlanTypeId,
+            SubscriptionPlanTypeName: subscriptionPlan.SubscriptionPlanType.Name, 
+            Price: subscriptionPlan.SubscriptionPlanType.Price.Amount,
+            PaymentCurrency: subscriptionPlan.SubscriptionPlanType.Price.Currency,
+            BillingCycle: subscriptionPlan.SubscriptionPlanType.BillingCycle, Status: subscriptionPlan.Status,
+            TenantName: subscriptionPlan.Tenant.Name);
     }
 }

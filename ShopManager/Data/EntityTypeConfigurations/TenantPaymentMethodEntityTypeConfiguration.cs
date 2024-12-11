@@ -17,6 +17,9 @@ public class TenantPaymentMethodEntityTypeConfiguration : IEntityTypeConfigurati
         builder.Property(x => x.PaymentDetails)
             .HasMaxLength(300)
             .IsRequired();
+        
+        builder.Property(x => x.Version).IsRowVersion();
+        
         builder.Property(x => x.IsDefaultPaymentMethod)
             .IsRequired();
         builder.HasOne(x => x.Tenant)

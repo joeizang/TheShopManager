@@ -104,3 +104,9 @@ Content-Type: application/json
 }
 
 ###
+
+### Get a tenant's SubscriptionPlans
+GET {{ShopManager_HostAddress}}/tenants/0193517b-4392-0f51-e4cc-e3d6679c4951/subscriptionplans
+Accept: application/json
+
+###

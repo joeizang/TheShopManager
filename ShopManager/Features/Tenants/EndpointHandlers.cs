@@ -72,4 +72,23 @@ public static class EndpointHandlers
             return TypedResults.InternalServerError();
         }
     }
+
+    public static async Task<IResult> GetSubscriptionPlansForTenant(Guid tenantId,
+        [FromServices] ShopManagerBaseContext context)
+    {
+        try
+        {
+            List<SubscriptionPlanDto> result = [];
+            await foreach (var plan in TenantsQueryService.GetSubscriptionPlanForTenant(context, tenantId))
+            {
+                result.Add(plan);
+            }
+            return TypedResults.Ok(result);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }

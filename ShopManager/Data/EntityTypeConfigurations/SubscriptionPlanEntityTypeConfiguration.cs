@@ -19,9 +19,8 @@ public class SubscriptionPlanEntityTypeConfiguration : IEntityTypeConfiguration<
         builder.Property(sp => sp.Status)
             .HasDefaultValue(ActivationStatus.INACTIVE)
             .IsRequired();
-
-        builder.Property(sp => sp.CreatedAt)
-            .IsRequired();
+        
+        builder.Property(x => x.Version).IsRowVersion();
         
         builder.HasOne(sp => sp.Tenant)
             .WithMany(t => t.SubscriptionPlans)

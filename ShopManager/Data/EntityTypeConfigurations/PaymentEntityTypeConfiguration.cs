@@ -22,6 +22,8 @@ public class PaymentEntityTypeConfiguration : IEntityTypeConfiguration<Payment>
         builder.Property(p => p.PaymentDate)
             .IsRequired();
         
+        builder.Property(x => x.Version).IsRowVersion();
+        
         builder.Property(p => p.PaymentMethod)
             .HasMaxLength(50)
             .IsRequired();

@@ -19,6 +19,8 @@ public class SaleItemEntityTypeConfiguration : IEntityTypeConfiguration<SaleItem
         builder.Property(s => s.QuantitySold)
             .HasPrecision(10, 2)
             .IsRequired();
+        
+        builder.Property(x => x.Version).IsRowVersion();
 
         builder.ComplexProperty(s => s.UnitPrice)
             .IsRequired();

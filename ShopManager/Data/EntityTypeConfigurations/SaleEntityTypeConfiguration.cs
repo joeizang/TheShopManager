@@ -18,6 +18,8 @@ public class SaleEntityTypeConfiguration : IEntityTypeConfiguration<Sale>
 
         builder.Property(s => s.SaleDate)
             .IsRequired();
+        
+        builder.Property(x => x.Version).IsRowVersion();
 
         builder.ComplexProperty(s => s.TotalAmount)
             .IsRequired();

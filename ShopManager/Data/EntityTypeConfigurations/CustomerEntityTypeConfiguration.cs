@@ -15,6 +15,8 @@ public class CustomerEntityTypeConfiguration : IEntityTypeConfiguration<Customer
 
         builder.Property(s => s.Id)
             .ValueGeneratedOnAdd();
+        
+        builder.Property(x => x.Version).IsRowVersion();
 
         builder.Property(x => x.FirstName).IsRequired();
 
