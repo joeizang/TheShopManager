@@ -11,6 +11,10 @@ public class ApplicationRole : IdentityRole
     public string RoleCode { get; set; } = string.Empty;
 
     public bool ElevatedUser { get; set; }
+    
+    public uint Version { get; set; }
+
+    public bool IsDeleted { get; set; }
 
     public Instant CreatedAt { get; set; } = SystemClock.Instance.GetCurrentInstant();
 

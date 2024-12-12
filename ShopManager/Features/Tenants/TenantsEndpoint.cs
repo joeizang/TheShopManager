@@ -17,8 +17,7 @@ public static class TenantsEndpoint
         tenantGroup.MapGet("", EndpointHandlers.GetCursoredTenants);
         tenantGroupWithId.MapGet("/subscriptionplans", EndpointHandlers.GetSubscriptionPlansForTenant)
             .Produces<SubscriptionPlanDto>(200)
-            .Produces(404)
-            .Produces(500);
+            .Produces(404);
 
         tenantGroup.MapPost("", EndpointHandlers.CreateTenant)
             .AddEndpointFilter<FilterCreateTenant>()
@@ -28,13 +27,13 @@ public static class TenantsEndpoint
 
         tenantGroupWithId.MapGet("", EndpointHandlers.GetTenantByIdAsync)
             .Produces<TenantDto>(200)
-            .Produces(404)
-            .Produces(500);
+            .Produces(404);
 
         tenantGroupWithId.MapDelete("", EndpointHandlers.DeleteTenant)
         .AddEndpointFilter<FilterDeleteTenant>()
         .Produces(204)
-        .Produces(400);
+        .Produces(400)
+        .Produces(404);
 
         return tenantGroup;
     }

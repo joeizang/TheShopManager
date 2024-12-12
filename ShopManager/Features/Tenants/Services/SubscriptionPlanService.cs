@@ -1,3 +1,4 @@
+using LanguageExt.Common;
 using Microsoft.EntityFrameworkCore;
 using ShopManager.Data;
 using ShopManager.Features.Tenants.Abstractions;
@@ -7,15 +8,15 @@ namespace ShopManager.Features.Tenants.Services;
 
 public class SubscriptionPlanService(ShopManagerBaseContext context) : ISubscriptionPlan
 {
-    public async Task<SubscriptionPlanTypeDto> CreateSubscriptionPlanType(CreateSubscriptionPlanTypeDto inputModel)
+    public async Task<Result<SubscriptionPlanTypeDto>> CreateSubscriptionPlanType(CreateSubscriptionPlanTypeDto inputModel)
     {
         var subscriptionPlanType = inputModel.MapToSubscriptionPlanType();
         context.SubscriptionPlanTypes.Add(subscriptionPlanType);
         await context.SaveChangesAsync().ConfigureAwait(false);
-        return subscriptionPlanType.MapToSubscriptionPlanTypeDto();
+        return new Result<SubscriptionPlanTypeDto>(subscriptionPlanType.MapToSubscriptionPlanTypeDto());
     }
 
-    public async Task<SubscriptionPlanDto> CreateSubscriptionPlan(CreateSubscriptionPlanDto inputModel)
+    public async Task<Result<SubscriptionPlanDto>> CreateSubscriptionPlan(CreateSubscriptionPlanDto inputModel)
     {
         //You have to confirm that payment was successful before this happens.
         var subscriptionPlan = new SubscriptionPlan
@@ -25,10 +26,10 @@ public class SubscriptionPlanService(ShopManagerBaseContext context) : ISubscrip
         };
         context.SubscriptionPlans.Add(subscriptionPlan);
         await context.SaveChangesAsync().ConfigureAwait(false);
-        return subscriptionPlan.MapSubscriptionPlanToDto();
+        return new Result<SubscriptionPlanDto>(subscriptionPlan.MapSubscriptionPlanToDto());
     }
 
-    public async Task<SubscriptionPlanDto> UpdateSubscriptionPlan(UpdateSubscriptionPlanDto inputModel)
+    public async Task<Result<SubscriptionPlanDto>> UpdateSubscriptionPlan(UpdateSubscriptionPlanDto inputModel)
     {
         //Updating a subscription plan is possible when the current plan is expired or
         //when the tenant wants to move up or down the plans. So if a current plan is active
@@ -36,7 +37,7 @@ public class SubscriptionPlanService(ShopManagerBaseContext context) : ISubscrip
         var currentPlan = await context.SubscriptionPlans.FindAsync(inputModel.SubscriptionPlanId).ConfigureAwait(false);
         if (currentPlan is null)
         {
-            return null;
+            return new Result<SubscriptionPlanDto>();
         }
 
         if (currentPlan.TenantId == inputModel.TenantId && 
@@ -45,11 +46,11 @@ public class SubscriptionPlanService(ShopManagerBaseContext context) : ISubscrip
             currentPlan.SubscriptionPlanTypeId = inputModel.SubscriptionPlanTypeId;
             context.Entry(currentPlan).State = EntityState.Modified;
             await context.SaveChangesAsync().ConfigureAwait(false);
-            return currentPlan.MapSubscriptionPlanToDto();
+            return new Result<SubscriptionPlanDto>(currentPlan.MapSubscriptionPlanToDto());
         }
         else
         {
-            return null;
+            return new Result<SubscriptionPlanDto>();
         }
     }
 

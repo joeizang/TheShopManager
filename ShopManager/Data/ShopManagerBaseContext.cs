@@ -10,10 +10,20 @@ public class ShopManagerBaseContext(DbContextOptions options) : IdentityDbContex
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+        modelBuilder.Entity<ApplicationUser>()
+            .HasQueryFilter(x => x.IsDeleted == true);
+        modelBuilder.Entity<ApplicationUser>()
+            .Property(x => x.Version)
+            .IsRowVersion();
+        modelBuilder.Entity<ApplicationRole>()
+            .Property(x => x.Version)
+            .IsRowVersion();
+            
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ShopManagerBaseContext).Assembly);
     }
 
     public DbSet<Shop> Shops { get; set; } = default!;
+    public DbSet<ApplicationUser> ShopUsers { get; set; } = default!;
     public DbSet<Product> Products { get; set; } = default!;
     public DbSet<Category> Categories { get; set; } = default!;
     public DbSet<Customer> Customers { get; set; } = default!;

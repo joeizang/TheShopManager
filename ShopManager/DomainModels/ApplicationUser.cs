@@ -9,6 +9,10 @@ public class ApplicationUser : IdentityUser
 
     public Shop Shop { get; set; } = default!;
 
+    public bool IsDeleted { get; set; }
+    
+    public uint Version { get; set; }
+
     public string FirstName { get; set; } = string.Empty;
 
     public string LastName { get; set; } = string.Empty;

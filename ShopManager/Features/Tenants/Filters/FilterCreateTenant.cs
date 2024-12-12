@@ -1,5 +1,6 @@
 ﻿
 using FluentValidation;
+using LanguageExt.Common;
 
 namespace ShopManager.Features.Tenants.Filters
 {
@@ -10,7 +11,7 @@ namespace ShopManager.Features.Tenants.Filters
             var model = context.GetArgument<CreateTenantDto>(1);
             var validationResult = await validator.ValidateAsync(model);
             return validationResult.IsValid ? await next(context)
-                : Results.ValidationProblem(validationResult.ToDictionary());
+                : new Result<IResult>(Results.ValidationProblem(validationResult.ToDictionary()));
         }
     }
 }

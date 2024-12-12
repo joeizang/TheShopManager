@@ -1,8 +1,10 @@
+using LanguageExt.Common;
 using Microsoft.AspNetCore.Mvc;
 using NodaTime;
 using NodaTime.Text;
 using ShopManager.Data;
 using ShopManager.Features.Tenants.Abstractions;
+using ShopManager.Features.Tenants.Services;
 
 namespace ShopManager.Features.Tenants;
 
@@ -11,29 +13,16 @@ public static class EndpointHandlers
     public static async Task<IResult> CreateTenant([FromServices] ITenantCommandService command, 
         [FromBody] CreateTenantDto inputModel)
     {
-        try
-        {
             var result = await command.CreateTenant(inputModel).ConfigureAwait(false);
-            return TypedResults.Created();
-        }
-        catch (Exception e)
-        {
-            // Log the exception
-            return TypedResults.InternalServerError();
-        }
+            return result.Match<IResult>(r => TypedResults.Created<TenantDto>("", r),
+                error => TypedResults.InternalServerError());
     }
 
-    public static async Task<IResult> GetTenantByIdAsync(Guid tenantId, [FromServices] ShopManagerBaseContext context)
+    public static async Task<IResult> GetTenantByIdAsync(Guid tenantId, 
+        [FromServices] ShopManagerBaseContext context)
     {
-        try
-        {
-            var tenant = await TenantsQueryService.GetTenantById(context, tenantId);
-            return tenant is not null ? TypedResults.Ok(tenant) : TypedResults.NotFound();
-        }
-        catch (Exception e)
-        {
-            return TypedResults.InternalServerError();
-        }
+        var tenant = await TenantsQueryService.GetTenantById(context, tenantId);
+        return tenant is not null ? TypedResults.Ok(tenant) : TypedResults.NotFound();
     }
     
     public static async Task<IResult> GetTenants([FromServices] ShopManagerBaseContext context)
@@ -62,33 +51,38 @@ public static class EndpointHandlers
     
     public static async Task<IResult> DeleteTenant(Guid tenantId, [FromServices] ITenantCommandService command)
     {
-        try
-        {
-            var result = await command.DeleteTenant(tenantId).ConfigureAwait(false);
-            return result;
-        }
-        catch (Exception e)
-        {
-            return TypedResults.InternalServerError();
-        }
+        var result = await command.DeleteTenant(tenantId).ConfigureAwait(false);
+        return result;
     }
 
     public static async Task<IResult> GetSubscriptionPlansForTenant(Guid tenantId,
         [FromServices] ShopManagerBaseContext context)
     {
-        try
+        List<SubscriptionPlanDto> result = [];
+        await foreach (var plan in TenantsQueryService.GetSubscriptionPlanForTenant(context, tenantId))
         {
-            List<SubscriptionPlanDto> result = [];
-            await foreach (var plan in TenantsQueryService.GetSubscriptionPlanForTenant(context, tenantId))
-            {
-                result.Add(plan);
-            }
-            return TypedResults.Ok(result);
+            result.Add(plan);
         }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
+        return TypedResults.Ok(result);
+    }
+
+    public static async Task<IResult> CreateSubscriptionPlan([FromBody] CreateSubscriptionPlanDto inputModel,
+        [FromServices] ISubscriptionPlan service
+        )
+    {
+        var result = await service.CreateSubscriptionPlan(inputModel);
+        return result.Match<IResult>(
+            r => TypedResults.Created<SubscriptionPlanDto>("", r),
+            error => TypedResults.InternalServerError());
+    }
+
+    public static Task GetSubscriptionPlanById(HttpContext context)
+    {
+        throw new NotImplementedException();
+    }
+
+    public static Task DeleteSubscriptionPlan(HttpContext context)
+    {
+        throw new NotImplementedException();
     }
 }
