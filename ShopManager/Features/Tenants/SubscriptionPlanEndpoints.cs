@@ -8,13 +8,15 @@ public static class SubscriptionPlanEndpoints
     public static RouteGroupBuilder MapSubscriptionPlanEndpoints(this IEndpointRouteBuilder endpoints)
     {
         var subscriptionPlanGroup = endpoints.MapGroup($"{Constants.V1}/subscriptionplans");
+        var subscriptionPlanTypeGroup = endpoints.MapGroup($"Constants.V1/subscriptionplantypes");
         var subscriptionPlanGroupWithId = subscriptionPlanGroup.MapGroup("/{subscriptionPlanId:guid}");
+        var subscriptionPlanTypeGroupWithId = subscriptionPlanTypeGroup.MapGroup("/{subscriptionPlanTypeId:guid}");
         
-        // subscriptionPlanGroup.MapGet("/all", EndpointHandlers.GetSubscriptionPlans);
-        // subscriptionPlanGroup.MapGet("", EndpointHandlers.GetCursoredSubscriptionPlans);
-        // subscriptionPlanGroupWithId.MapGet("", EndpointHandlers.GetSubscriptionPlanById)
-        //     .Produces<SubscriptionPlanDto>(200)
-        //     .Produces(404);
+        subscriptionPlanGroup.MapGet("/all", EndpointHandlers.GetSubscriptionPlans);
+        subscriptionPlanGroup.MapGet("", EndpointHandlers.GetCursoredSubscriptionPlans);
+        subscriptionPlanGroupWithId.MapGet("", EndpointHandlers.GetSubscriptionPlanById)
+            .Produces<SubscriptionPlanDto>(200)
+            .Produces(404);
 
         subscriptionPlanGroup.MapPost("", EndpointHandlers.CreateSubscriptionPlan)
             .AddEndpointFilter<FilterCreateSubscriptionPlan>()

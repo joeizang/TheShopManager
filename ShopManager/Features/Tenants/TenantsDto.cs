@@ -31,4 +31,6 @@ public record SubscriptionPlanDto(Guid TenantId, string TenantName, Guid Subscri
     string SubscriptionPlanTypeName, decimal Price, Currency PaymentCurrency,
     BillingCycle BillingCycle, ActivationStatus Status);
 
-public record CreateSubscriptionPlanDto(Guid TenantId, Guid SubscriptionPlanTypeId);    
+public record CreateSubscriptionPlanDto(Guid TenantId, Guid SubscriptionPlanTypeId);
+
+public record DeleteSubscriptionPlanDto(Guid SubscriptionPlanId);  

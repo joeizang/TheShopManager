@@ -2,6 +2,7 @@ using LanguageExt.Common;
 using Microsoft.AspNetCore.Mvc;
 using NodaTime;
 using NodaTime.Text;
+using ShopManager.Core;
 using ShopManager.Data;
 using ShopManager.Features.Tenants.Abstractions;
 using ShopManager.Features.Tenants.Services;
@@ -76,13 +77,40 @@ public static class EndpointHandlers
             error => TypedResults.InternalServerError());
     }
 
-    public static Task GetSubscriptionPlanById(HttpContext context)
+    public static async Task<IResult> GetSubscriptionPlanById(Guid subId, [FromServices] ShopManagerBaseContext context)
     {
-        throw new NotImplementedException();
+        var result = await TenantsQueryService.GetSubscriptionPlanById(context, subId);
+        return result.Match<IResult>(
+            TypedResults.Ok,
+            error => TypedResults.NotFound());
     }
 
-    public static Task DeleteSubscriptionPlan(HttpContext context)
+    public static async Task<IResult> DeleteSubscriptionPlan(Guid subscriptionPlanId, [FromServices] ISubscriptionPlan service)
     {
-        throw new NotImplementedException();
+        var result = await service.DeleteSubscriptionPlan(subscriptionPlanId);
+        return result.Match<IResult>(
+            r => TypedResults.NoContent(),
+            error => TypedResults.NotFound());
+    }
+
+    public static async Task<IResult> GetSubscriptionPlans([FromServices] ShopManagerBaseContext context)
+    {
+        List<SubscriptionPlanDto> result = [];
+        await foreach (var plan in TenantsQueryService.GetSubscriptionPlans(context))
+        {
+            result.Add(plan);
+        }
+
+        return TypedResults.Ok(result);
+    }
+
+    public static async Task<IResult> GetCursoredSubscriptionPlans(string cursor, [FromServices] ShopManagerBaseContext context)
+    {
+        List<SubscriptionPlanDto> result = [];
+        await foreach(var plan in TenantsQueryService.GetCursoredSubscriptionPlans(context, cursor.ToInstantDate()))
+        {
+            result.Add(plan);
+        }
+        return TypedResults.Ok(result);
     }
 }

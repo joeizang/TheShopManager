@@ -1,3 +1,4 @@
+using LanguageExt.Common;
 using NodaTime;
 using NodaTime.Text;
 using ShopManager.DomainModels;
@@ -121,5 +122,10 @@ public static class TenantsExtensions
             PaymentCurrency: subscriptionPlan.SubscriptionPlanType.Price.Currency,
             BillingCycle: subscriptionPlan.SubscriptionPlanType.BillingCycle, Status: subscriptionPlan.Status,
             TenantName: subscriptionPlan.Tenant.Name);
+    }
+    
+    public static Result<SubscriptionPlanDto?> ProjectToSubscriptionPlanDtoResult(this SubscriptionPlanDto? subscriptionPlan)
+    {
+        return new Result<SubscriptionPlanDto?>(subscriptionPlan);
     }
 }

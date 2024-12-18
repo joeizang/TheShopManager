@@ -11,7 +11,7 @@ public interface ISubscriptionPlan
     
     Task<Result<SubscriptionPlanDto>> UpdateSubscriptionPlan(UpdateSubscriptionPlanDto inputModel);
     
-    Task<IResult> DeleteSubscriptionPlan(Guid subscriptionPlanId);
+    Task<Result<IResult>> DeleteSubscriptionPlan(Guid subscriptionPlanId);
     
-    Task<IResult> DeleteSubscriptionPlanType(Guid subscriptionPlanTypeId);
+    Task<Result<IResult>> DeleteSubscriptionPlanType(Guid subscriptionPlanTypeId);
 }

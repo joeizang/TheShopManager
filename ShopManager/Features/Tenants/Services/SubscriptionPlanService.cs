@@ -54,29 +54,29 @@ public class SubscriptionPlanService(ShopManagerBaseContext context) : ISubscrip
         }
     }
 
-    public async Task<IResult> DeleteSubscriptionPlan(Guid subscriptionPlanId)
+    public async Task<Result<IResult>> DeleteSubscriptionPlan(Guid subscriptionPlanId)
     {
         var plan = await context.SubscriptionPlans.FindAsync(subscriptionPlanId).ConfigureAwait(false);
         if (plan is null)
         {
-            return TypedResults.NotFound();
+            return new Result<IResult>(TypedResults.NotFound());
         }
         plan.IsDeleted = true;
         context.Entry(plan).State = EntityState.Modified;
         await context.SaveChangesAsync().ConfigureAwait(false);
-        return TypedResults.NoContent();
+        return new Result<IResult>(TypedResults.NoContent());
     }
 
-    public async Task<IResult> DeleteSubscriptionPlanType(Guid subscriptionPlanTypeId)
+    public async Task<Result<IResult>> DeleteSubscriptionPlanType(Guid subscriptionPlanTypeId)
     {
         var plan = await context.SubscriptionPlanTypes.FindAsync(subscriptionPlanTypeId).ConfigureAwait(false);
         if (plan is null)
         {
-            return TypedResults.NotFound();
+            return new Result<IResult>(TypedResults.NotFound());
         }
         plan.IsDeleted = true;
         context.Entry(plan).State = EntityState.Modified;
         await context.SaveChangesAsync().ConfigureAwait(false);
-        return TypedResults.NoContent();
+        return new Result<IResult>(TypedResults.NoContent());
     }
 }
