@@ -80,4 +80,33 @@ public static class TenantsQueryService
                         sp.SubscriptionPlanType.Name, sp.SubscriptionPlanType.Price.Amount,
                         sp.SubscriptionPlanType.Price.Currency, sp.SubscriptionPlanType.BillingCycle, sp.Status))
                     .Take(10));
+
+    public static readonly Func<ShopManagerBaseContext, IAsyncEnumerable<SubscriptionPlanTypeDto>>
+        GetSubscriptionPlanTypes = EF.CompileAsyncQuery(
+            (ShopManagerBaseContext context) =>
+                context.SubscriptionPlanTypes.AsNoTracking()
+                    .Select(spt => new SubscriptionPlanTypeDto(spt.Name, spt.Description, spt.Price.Amount,
+                        spt.Price.Currency, spt.Features, spt.Discount))
+                    .Take(10)
+        );
+
+    public static readonly Func<ShopManagerBaseContext, Instant, IAsyncEnumerable<SubscriptionPlanTypeDto>>
+        GetCursoredSubscriptionPlanTypes = EF.CompileAsyncQuery(
+            (ShopManagerBaseContext context, Instant cursor) =>
+                context.SubscriptionPlanTypes.AsNoTracking()
+                    .Where(spt => spt.CreatedAt > cursor)
+                    .Select(spt => new SubscriptionPlanTypeDto(spt.Name, spt.Description, spt.Price.Amount,
+                        spt.Price.Currency, spt.Features, spt.Discount))
+                    .Take(10));
+
+    public static readonly Func<ShopManagerBaseContext, Guid, Task<SubscriptionPlanTypeDto?>>
+        GetSubscriptionPlanTypesById = EF.CompileAsyncQuery(
+            (ShopManagerBaseContext context, Guid subTypeId) =>
+                context.SubscriptionPlanTypes.AsNoTracking()
+                    .Include(spt => spt.SubscriptionPlans)
+                    .Where(spt => spt.Id.Equals(subTypeId))
+                    .Select(spt => new SubscriptionPlanTypeDto(spt.Name, spt.Description, spt.Price.Amount,
+                        spt.Price.Currency, spt.Features, spt.Discount))
+                    .SingleOrDefault()
+        );
 }

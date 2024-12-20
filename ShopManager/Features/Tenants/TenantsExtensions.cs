@@ -91,7 +91,7 @@ public static class TenantsExtensions
     public static SubscriptionPlanTypeDto MapToSubscriptionPlanTypeDto(this SubscriptionPlanType dto)
     {
         return new SubscriptionPlanTypeDto(Name: dto.Name, Description: dto.Description,
-            Price: dto.Price.Amount, Features: dto.Features, Discount: dto.Discount);
+            Price: dto.Price.Amount, Currency.NGN, Features: dto.Features, Discount: dto.Discount);
     }
     
     public static object MapToSubscriptionPlanDto(this SubscriptionPlan subscriptionPlan)

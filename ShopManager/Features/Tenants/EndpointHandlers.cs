@@ -113,4 +113,52 @@ public static class EndpointHandlers
         }
         return TypedResults.Ok(result);
     }
+
+    public static async Task<IResult> GetSubscriptionPlanTypes([FromServices] ShopManagerBaseContext context)
+    {
+        List<SubscriptionPlanTypeDto> result = [];
+        await foreach (var planType in TenantsQueryService.GetSubscriptionPlanTypes(context))
+        {
+            result.Add(planType);
+        }
+
+        return TypedResults.Ok(result);
+    }
+
+    public static async Task<IResult> GetCursoredSubscriptionPlanTypes(string cursor, [FromServices] ShopManagerBaseContext context)
+    {
+        List<SubscriptionPlanTypeDto> result = [];
+        await foreach (var planType in TenantsQueryService.GetCursoredSubscriptionPlanTypes(context, cursor.ToInstantDate()))
+        {
+            result.Add(planType);
+        }
+
+        return TypedResults.Ok(result);
+    }
+
+    public static async Task<IResult> GetSubscriptionPlanTypeById(Guid subTypeId, ShopManagerBaseContext context)
+    {
+        var result = await TenantsQueryService.GetSubscriptionPlanTypesById(context, subTypeId);
+        return result is not null ? TypedResults.Ok(result) : TypedResults.NotFound();
+    }
+
+    public static async Task<IResult> CreateSubscriptionPlanType([FromBody] CreateSubscriptionPlanTypeDto inputModel,
+        [FromServices] ISubscriptionPlan service)
+    {
+        var result = await service.CreateSubscriptionPlanType(inputModel);
+        var returned = result.Match<SubscriptionPlanTypeDto>(
+            r => r,
+            error => null);
+        return returned is not null ? 
+            TypedResults.Created<SubscriptionPlanTypeDto>("", returned) : 
+            TypedResults.InternalServerError();
+    }
+
+    public static async Task<IResult> DeleteSubscriptionPlanType(Guid subscriptionPlanTypeId, [FromServices] ISubscriptionPlan service)
+    {
+        var result = await service.DeleteSubscriptionPlanType(subscriptionPlanTypeId);
+        return result.Match<IResult>(
+            r => TypedResults.NoContent(),
+            error => TypedResults.NotFound());
+    }
 }
