@@ -12,9 +12,9 @@ public static class SubscriptionPlanTypeEndpoints
         
         subscriptionPlanTypeGroup.MapGet("/all", EndpointHandlers.GetSubscriptionPlanTypes);
         subscriptionPlanTypeGroup.MapGet("", EndpointHandlers.GetCursoredSubscriptionPlanTypes);
-        subscriptionPlanTypeGroupWithId.MapGet("", EndpointHandlers.GetSubscriptionPlanTypeById)
-            .Produces<SubscriptionPlanTypeDto>(200)
-            .Produces(404);
+        // subscriptionPlanTypeGroupWithId.MapGet("", EndpointHandlers.GetSubscriptionPlanTypeById)
+        //     .Produces<SubscriptionPlanTypeDto>(200)
+        //     .Produces(404);
 
         subscriptionPlanTypeGroup.MapPost("", EndpointHandlers.CreateSubscriptionPlanType)
             .AddEndpointFilter<FilterCreateSubscriptionPlanType>()

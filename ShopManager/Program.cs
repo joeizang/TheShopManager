@@ -12,6 +12,7 @@ using ShopManager.Features.Shops.Validations;
 using ShopManager.Features.Tenants;
 using ShopManager.Features.Tenants.Abstractions;
 using ShopManager.Features.Tenants.Services;
+using ShopManager.Features.Tenants.Validations;
 
 var builder = WebApplication.CreateBuilder(args);
 Console.WriteLine(Ulid.NewUlid().ToGuid());
@@ -45,6 +46,9 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 builder.Services.AddScoped<ShopQueryService>();
 builder.Services.AddScoped<IValidator<CreateShopDto>, ValidateCreateShopDto>();
 builder.Services.AddScoped<IValidator<UpdateShopDto>, ValidateUpdateShopDto>();
+builder.Services.AddScoped<IValidator<CreateSubscriptionPlanTypeDto>, ValidateCreateSubscriptionPlanType>();
+builder.Services.AddScoped<IValidator<CreateSubscriptionPlanDto>, ValidateCreateSubscriptionPlan>();
+
 builder.Services.AddScoped<IShopCommandService, ShopsCommandService>();
 builder.Services.AddScoped<ITenantCommandService, TenantCommandService>();
 builder.Services.AddScoped<ISubscriptionPlan, SubscriptionPlanService>();
@@ -68,5 +72,7 @@ app.MapIdentityApi<ApplicationUser>();
 app.MapShopEndpoints();
 app.MapProductsEndpoints();
 app.MapTenantEndpoints();
+app.MapSubscriptionPlanEndpoints();
+app.MapSubscriptionPlanTypeEndpoints();
 
 app.Run();

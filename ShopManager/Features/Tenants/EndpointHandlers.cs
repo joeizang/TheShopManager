@@ -151,7 +151,7 @@ public static class EndpointHandlers
             error => null);
         return returned is not null ? 
             TypedResults.Created<SubscriptionPlanTypeDto>("", returned) : 
-            TypedResults.InternalServerError();
+            TypedResults.BadRequest("Your subscription plan could not be created!");
     }
 
     public static async Task<IResult> DeleteSubscriptionPlanType(Guid subscriptionPlanTypeId, [FromServices] ISubscriptionPlan service)

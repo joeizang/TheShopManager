@@ -1,4 +1,5 @@
 using System;
+using LanguageExt.Common;
 using Microsoft.EntityFrameworkCore;
 using ShopManager.Data;
 
@@ -8,27 +9,32 @@ public class ShopsCommandService(ShopManagerBaseContext context) : IShopCommandS
 {
     private readonly ShopManagerBaseContext _context = context;
 
-    public async Task<ShopDto> CreateShop(CreateShopDto model)
+    public async Task<Result<ShopDto>> CreateShop(CreateShopDto model)
     {
         var shop = model.MapToShop();
         _context.Shops.Add(shop);
         await _context.SaveChangesAsync();
-        return shop.MapToShopDto();
+        return new Result<ShopDto>(shop.MapToShopDto());
     }
 
-    public async Task<ShopDto> UpdateShop(UpdateShopDto model)
+    public async Task<Result<ShopDto>> UpdateShop(UpdateShopDto model)
     {
         var shop = model.MapToShop();
         _context.Entry(shop).State = EntityState.Modified;
         await _context.SaveChangesAsync();
-        return shop.MapToShopDto();
+        return new Result<ShopDto>(shop.MapToShopDto());
     }
     
-    public async Task DeleteShop(Guid shopId)
+    public async Task<Result<IResult>> DeleteShop(Guid shopId)
     {
         var shop = await _context.Shops.FindAsync(shopId);
+        if (shop is null)
+        {
+            return new Result<IResult>(TypedResults.NotFound());
+        }
         shop.IsDeleted = true;
         _context.Entry(shop).State = EntityState.Modified;
         await _context.SaveChangesAsync();
+        return new Result<IResult>(TypedResults.NoContent());
     }
 }

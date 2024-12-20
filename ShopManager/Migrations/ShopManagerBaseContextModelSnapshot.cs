@@ -312,7 +312,7 @@ namespace ShopManager.Migrations
 
                     b.HasIndex("ShopId");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("ShopManager.DomainModels.Customer", b =>
@@ -373,7 +373,7 @@ namespace ShopManager.Migrations
 
                     b.HasIndex("FirstName", "LastName");
 
-                    b.ToTable("Customers");
+                    b.ToTable("Customers", (string)null);
                 });
 
             modelBuilder.Entity("ShopManager.DomainModels.FairlyUsedItem", b =>
@@ -457,7 +457,7 @@ namespace ShopManager.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("FairlyUsedItems");
+                    b.ToTable("FairlyUsedItems", (string)null);
                 });
 
             modelBuilder.Entity("ShopManager.DomainModels.Inventory", b =>
@@ -505,7 +505,7 @@ namespace ShopManager.Migrations
 
                     b.HasIndex("ShopId");
 
-                    b.ToTable("Inventories");
+                    b.ToTable("Inventories", (string)null);
                 });
 
             modelBuilder.Entity("ShopManager.DomainModels.Payment", b =>
@@ -570,7 +570,7 @@ namespace ShopManager.Migrations
 
                     b.HasIndex("ShopId");
 
-                    b.ToTable("Payments");
+                    b.ToTable("Payments", (string)null);
                 });
 
             modelBuilder.Entity("ShopManager.DomainModels.Product", b =>
@@ -661,7 +661,7 @@ namespace ShopManager.Migrations
 
                     b.HasIndex("SupplierId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("ShopManager.DomainModels.Sale", b =>
@@ -724,7 +724,7 @@ namespace ShopManager.Migrations
 
                     b.HasIndex("ShopId");
 
-                    b.ToTable("Sales");
+                    b.ToTable("Sales", (string)null);
                 });
 
             modelBuilder.Entity("ShopManager.DomainModels.SaleItem", b =>
@@ -791,7 +791,7 @@ namespace ShopManager.Migrations
 
                     b.HasIndex("ShopId");
 
-                    b.ToTable("SaleItems");
+                    b.ToTable("SaleItems", (string)null);
                 });
 
             modelBuilder.Entity("ShopManager.DomainModels.Shop", b =>
@@ -865,7 +865,7 @@ namespace ShopManager.Migrations
 
                     b.HasIndex("TenantId");
 
-                    b.ToTable("Shops");
+                    b.ToTable("Shops", (string)null);
                 });
 
             modelBuilder.Entity("ShopManager.DomainModels.Supplier", b =>
@@ -919,7 +919,7 @@ namespace ShopManager.Migrations
                     b.HasIndex("SupplierName", "ShopId")
                         .IsUnique();
 
-                    b.ToTable("Suppliers");
+                    b.ToTable("Suppliers", (string)null);
                 });
 
             modelBuilder.Entity("ShopManager.Features.Tenants.DomainModels.SubscriptionPlan", b =>
@@ -960,7 +960,7 @@ namespace ShopManager.Migrations
 
                     b.HasIndex("TenantId");
 
-                    b.ToTable("SubscriptionPlans");
+                    b.ToTable("SubscriptionPlans", (string)null);
                 });
 
             modelBuilder.Entity("ShopManager.Features.Tenants.DomainModels.SubscriptionPlanType", b =>
@@ -1017,7 +1017,7 @@ namespace ShopManager.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SubscriptionPlanTypes");
+                    b.ToTable("SubscriptionPlanTypes", (string)null);
                 });
 
             modelBuilder.Entity("ShopManager.Features.Tenants.DomainModels.Tenant", b =>
@@ -1095,7 +1095,7 @@ namespace ShopManager.Migrations
                     b.HasIndex("EmailAddress")
                         .IsUnique();
 
-                    b.ToTable("Tenants");
+                    b.ToTable("Tenants", (string)null);
                 });
 
             modelBuilder.Entity("ShopManager.Features.Tenants.DomainModels.TenantInvoice", b =>
@@ -1157,7 +1157,7 @@ namespace ShopManager.Migrations
 
                     b.HasIndex("TenantId");
 
-                    b.ToTable("TenantInvoices");
+                    b.ToTable("TenantInvoices", (string)null);
                 });
 
             modelBuilder.Entity("ShopManager.Features.Tenants.DomainModels.TenantPayment", b =>
@@ -1223,7 +1223,7 @@ namespace ShopManager.Migrations
 
                     b.HasIndex("TenantId");
 
-                    b.ToTable("TenantPayments");
+                    b.ToTable("TenantPayments", (string)null);
                 });
 
             modelBuilder.Entity("ShopManager.Features.Tenants.DomainModels.TenantPaymentMethod", b =>
@@ -1264,7 +1264,7 @@ namespace ShopManager.Migrations
 
                     b.HasIndex("TenantId");
 
-                    b.ToTable("TenantPaymentMethods");
+                    b.ToTable("TenantPaymentMethods", (string)null);
                 });
 
             modelBuilder.Entity("ShopManager.DomainModels.ApplicationRole", b =>
