@@ -5,6 +5,7 @@ using NodaTime.Text;
 using ShopManager.Core;
 using ShopManager.Data;
 using ShopManager.Features.Tenants.Abstractions;
+using ShopManager.Features.Tenants.Dtos;
 using ShopManager.Features.Tenants.Services;
 
 namespace ShopManager.Features.Tenants;

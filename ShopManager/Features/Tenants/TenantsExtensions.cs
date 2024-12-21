@@ -2,6 +2,8 @@ using LanguageExt.Common;
 using NodaTime;
 using NodaTime.Text;
 using ShopManager.DomainModels;
+using ShopManager.Features.Shops.DomainModels;
+using ShopManager.Features.Tenants.Dtos;
 
 namespace ShopManager.Features.Tenants;
 using ShopManager.Features.Tenants.DomainModels;

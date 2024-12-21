@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NodaTime;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ShopManager.Data;
+using ShopManager.Features.Shops.DomainModels;
+using ShopManager.Features.Tenants.DomainModels;
 using ShopManager.DomainModels;
 
 #nullable disable

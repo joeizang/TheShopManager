@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Migrations;
 using NodaTime;
 using ShopManager.DomainModels;
+using ShopManager.Features.Shops.DomainModels;
 
 #nullable disable
 

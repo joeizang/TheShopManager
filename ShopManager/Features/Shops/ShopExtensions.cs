@@ -2,6 +2,7 @@ using System.Text.Json;
 using NodaTime;
 using NodaTime.Serialization.SystemTextJson;
 using ShopManager.DomainModels;
+using ShopManager.Features.Shops.DomainModels;
 
 namespace ShopManager.Features.Shops;
 

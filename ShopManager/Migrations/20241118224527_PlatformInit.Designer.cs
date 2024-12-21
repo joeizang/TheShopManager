@@ -9,6 +9,8 @@ using NodaTime;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ShopManager.Data;
 using ShopManager.DomainModels;
+using ShopManager.Features.Shops.DomainModels;
+using ShopManager.Features.Tenants.DomainModels;
 
 #nullable disable
 

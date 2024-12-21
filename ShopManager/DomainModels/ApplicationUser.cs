@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using NodaTime;
+using ShopManager.Features.Shops.DomainModels;
 
 namespace ShopManager.DomainModels;
 

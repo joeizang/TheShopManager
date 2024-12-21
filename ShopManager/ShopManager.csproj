@@ -25,11 +25,11 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="9.0.0" />
     <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="9.0.0" />
-    <PackageReference Include="Microsoft.OpenApi" Version="1.6.22" />
+    <PackageReference Include="Microsoft.OpenApi" Version="1.6.23" />
     <PackageReference Include="NodaTime" Version="3.2.0" />
     <PackageReference Include="NodaTime.Serialization.SystemTextJson" Version="1.2.0" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.1" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.NodaTime" Version="9.0.1" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.2" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.NodaTime" Version="9.0.2" />
     <PackageReference Include="System.Composition.TypedParts" Version="9.0.0" />
     <PackageReference Include="System.IO.Pipelines" Version="9.0.0" />
     <PackageReference Include="System.Reflection.Metadata" Version="9.0.0" />
@@ -38,11 +38,6 @@
     <PackageReference Include="System.Threading.Channels" Version="9.0.0" />
     <PackageReference Include="Ulid" Version="1.3.4" />
     <PackageReference Include="Ulid.SystemTextJson" Version="1.3.4" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Features\Sales\Filters\" />
-    <Folder Include="Features\Sales\Validations\" />
   </ItemGroup>
 
 </Project>

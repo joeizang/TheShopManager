@@ -1,5 +1,6 @@
 using FluentValidation;
 using LanguageExt.Common;
+using ShopManager.Features.Tenants.Dtos;
 using ShopManager.Features.Tenants.Validations;
 
 namespace ShopManager.Features.Tenants.Filters;

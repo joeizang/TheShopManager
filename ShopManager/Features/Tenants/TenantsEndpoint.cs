@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using NodaTime.Text;
 using ShopManager.Core;
 using ShopManager.Data;
+using ShopManager.Features.Tenants.Dtos;
 using ShopManager.Features.Tenants.Filters;
 
 namespace ShopManager.Features.Tenants;

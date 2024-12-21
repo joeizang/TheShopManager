@@ -1,9 +1,8 @@
-using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using ShopManager.DomainModels;
+using ShopManager.Features.Shops.DomainModels;
 
-namespace ShopManager.Data;
+namespace ShopManager.Data.EntityTypeConfigurations;
 
 public class SupplierEntityTypeConfiguration : IEntityTypeConfiguration<Supplier>
 {

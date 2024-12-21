@@ -1,5 +1,6 @@
 using NodaTime;
 using ShopManager.DomainModels;
+using ShopManager.Features.Shops.DomainModels;
 
 namespace ShopManager.Features.Tenants.DomainModels;
 

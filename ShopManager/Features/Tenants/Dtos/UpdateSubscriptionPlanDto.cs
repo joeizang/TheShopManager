@@ -1,6 +1,6 @@
 using ShopManager.DomainModels;
 
-namespace ShopManager.Features.Tenants;
+namespace ShopManager.Features.Tenants.Dtos;
 
 public record UpdateSubscriptionPlanDto(Guid SubscriptionPlanTypeId, Guid TenantId, Guid SubscriptionPlanId);
 

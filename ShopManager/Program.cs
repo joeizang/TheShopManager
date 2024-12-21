@@ -6,11 +6,13 @@ using NodaTime.Serialization.SystemTextJson;
 using NodaTime.Text;
 using ShopManager.Data;
 using ShopManager.DomainModels;
-using ShopManager.Features.Products;
 using ShopManager.Features.Shops;
+using ShopManager.Features.Shops.DomainModels;
+using ShopManager.Features.Shops.Products;
 using ShopManager.Features.Shops.Validations;
 using ShopManager.Features.Tenants;
 using ShopManager.Features.Tenants.Abstractions;
+using ShopManager.Features.Tenants.Dtos;
 using ShopManager.Features.Tenants.Services;
 using ShopManager.Features.Tenants.Validations;
 

@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using ShopManager.Features.Tenants.Dtos;
 
 namespace ShopManager.Features.Tenants.Validations;
 

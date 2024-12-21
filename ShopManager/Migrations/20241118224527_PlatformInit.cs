@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using NodaTime;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ShopManager.DomainModels;
+using ShopManager.Features.Shops.DomainModels;
 
 #nullable disable
 

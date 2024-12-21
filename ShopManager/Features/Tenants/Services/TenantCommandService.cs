@@ -1,10 +1,10 @@
 using LanguageExt.Common;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ShopManager.Data;
 using ShopManager.Features.Tenants.Abstractions;
+using ShopManager.Features.Tenants.Dtos;
 
-namespace ShopManager.Features.Tenants;
+namespace ShopManager.Features.Tenants.Services;
 
 public class TenantCommandService(ShopManagerBaseContext context) : ITenantCommandService
 {
