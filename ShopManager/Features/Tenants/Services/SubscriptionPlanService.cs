@@ -1,3 +1,4 @@
+using LanguageExt;
 using LanguageExt.Common;
 using Microsoft.EntityFrameworkCore;
 using ShopManager.Data;
@@ -9,7 +10,8 @@ namespace ShopManager.Features.Tenants.Services;
 
 public class SubscriptionPlanService(ShopManagerBaseContext context) : ISubscriptionPlan
 {
-    public async Task<Result<SubscriptionPlanTypeDto>> CreateSubscriptionPlanType(CreateSubscriptionPlanTypeDto inputModel)
+    public async Task<Result<SubscriptionPlanTypeDto>> CreateSubscriptionPlanType(
+        CreateSubscriptionPlanTypeDto inputModel)
     {
         var subscriptionPlanType = inputModel.MapToSubscriptionPlanType();
         context.SubscriptionPlanTypes.Add(subscriptionPlanType);

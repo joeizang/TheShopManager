@@ -54,6 +54,8 @@ builder.Services.AddScoped<IValidator<CreateSubscriptionPlanDto>, ValidateCreate
 builder.Services.AddScoped<IShopCommandService, ShopsCommandService>();
 builder.Services.AddScoped<ITenantCommandService, TenantCommandService>();
 builder.Services.AddScoped<ISubscriptionPlan, SubscriptionPlanService>();
+builder.Services.AddScoped<ITenantPaymentMethodCommandService, TenantPaymentMethodCommandService>();
+builder.Services.AddScoped<ITenantPaymentCommandService, TenantPaymentCommandService>();
 builder.Services.AddIdentityApiEndpoints<ApplicationUser>()
     .AddEntityFrameworkStores<ShopManagerBaseContext>()
     .AddApiEndpoints();

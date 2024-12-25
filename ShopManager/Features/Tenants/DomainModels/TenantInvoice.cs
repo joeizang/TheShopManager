@@ -15,7 +15,19 @@ public class TenantInvoice : BaseDomainModel
 
     public InvoiceStatus InvoiceStatus { get; set; } = InvoiceStatus.NOT_PAYED;
 
+    public SubscriptionPlanType SubscriptionPlanType { get; set; } = default!;
+    
+    public Guid SubscriptionPlanTypeId { get; set; }
+
     public Guid TenantId { get; set; }
 
     public Tenant Tenant { get; set; } = default!;
+    
+    public ICollection<TenantPayment> TenantPayments { get; set; } = [];
+
+    public TenantInvoice()
+    {
+        AmountDue = Tenant.SubscriptionPlans.Single().SubscriptionPlanType.Price;
+    }
+    
 }

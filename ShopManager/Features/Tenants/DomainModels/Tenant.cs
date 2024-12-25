@@ -1,6 +1,8 @@
+using LanguageExt;
 using NodaTime;
 using ShopManager.DomainModels;
 using ShopManager.Features.Shops.DomainModels;
+using Duration = NodaTime.Duration;
 
 namespace ShopManager.Features.Tenants.DomainModels;
 
@@ -18,7 +20,7 @@ public class Tenant : BaseDomainModel
 
     public string BillingAddress { get; set; } = string.Empty;
 
-    public bool ActivationStatus { get; set; }
+    public ActivationStatus ActivationStatus { get; set; }
 
     public PaymentStatus PaymentStatus { get; set; }
 
@@ -38,8 +40,25 @@ public class Tenant : BaseDomainModel
 
     public ICollection<TenantPayment> TenantPayments { get; set; } = [];
 
+    public Tenant(Guid subscriptionPlanTypeId)
+    {
+        // basically, there cannot be a tenant without a subscription plan
+        SubscriptionPlans.Add(new SubscriptionPlan
+        {
+            SubscriptionPlanTypeId = subscriptionPlanTypeId,
+            Status = ActivationStatus.INACTIVE,
+            TenantId = Id
+        });
+    }
+
+    private Tenant()
+    {
+        
+    }
+
     public void CalculateEndAndNextDates(Guid subscriptionPlanId)
     {
+        // tenants can only have one subscription plan at a time
         var subscriptionPlan = SubscriptionPlans.FirstOrDefault(x => x.Id == subscriptionPlanId);
         var currentMonth = ZonedDateTime.FromDateTimeOffset(DateTimeOffset.Now).Month;
         if (subscriptionPlan is null)
@@ -84,5 +103,35 @@ public class Tenant : BaseDomainModel
     private void CalculateYearlyBillingCycle()
     {
         throw new NotImplementedException();
+    }
+    
+    
+    // what does settling an invoice mean?
+    public object SettleLatestInvoice()
+    {
+        //get the latest invoice
+        var latestInvoice = TenantInvoices
+            .OrderByDescending(x => x.CreatedAt)
+            .FirstOrDefault();
+        
+        if(latestInvoice is null)
+        {
+            return Option<TenantInvoice>.None;
+        }
+
+        var paymentMethodId = PaymentMethods
+            .FirstOrDefault(x => x.IsDefaultPaymentMethod)!.Id;
+        var newPayment = new TenantPayment(paymentMethodId)
+        {
+            AmountPaid = latestInvoice.AmountDue,
+            PaymentDate = ZonedDateTime.FromDateTimeOffset(DateTimeOffset.Now).ToInstant(),
+            PaymentReference = Guid.NewGuid().ToString(),
+            Description = "Payment for invoice " + latestInvoice.InvoiceReference,
+            Status = PaymentStatus.PENDING,
+            TenantId = Id,
+            TenantInvoiceId = latestInvoice.Id
+        };
+        TenantPayments.Add(newPayment);
+        return Option<TenantPayment>.Some(newPayment);
     }
 }

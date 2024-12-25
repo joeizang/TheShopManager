@@ -37,6 +37,10 @@ public class TenantPaymentEntityTypeConfiguration : IEntityTypeConfiguration<Ten
             .WithMany(x => x.TenantPayments)
             .HasForeignKey(x => x.TenantId)
             .OnDelete(DeleteBehavior.NoAction);
+        builder.HasOne(x => x.TenantInvoice)
+            .WithMany(x => x.TenantPayments)
+            .HasForeignKey(x => x.TenantInvoiceId)
+            .OnDelete(DeleteBehavior.NoAction);
 
         builder.HasIndex(x => x.PaymentReference);
         builder.HasIndex(x => x.PaymentDate);

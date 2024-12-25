@@ -1,4 +1,5 @@
 using NodaTime;
+using ShopManager.CustomExceptions;
 using ShopManager.DomainModels;
 using ShopManager.Features.Shops.DomainModels;
 
@@ -16,6 +17,10 @@ public class TenantPayment : BaseDomainModel
 
     public PaymentStatus Status { get; set; }
 
+    public Guid TenantInvoiceId { get; set; }
+    
+    public TenantInvoice TenantInvoice { get; set; } = default!;
+
     public Guid PaymentMethodId { get; set; }
 
     public TenantPaymentMethod PaymentMethod { get; set; } = default!;
@@ -23,4 +28,13 @@ public class TenantPayment : BaseDomainModel
     public Guid TenantId { get; set; }
 
     public Tenant Tenant { get; set; } = default!;
+
+    public TenantPayment(Guid paymentMethodId)
+    {
+        if (paymentMethodId == Guid.Empty)
+        {
+            throw new NoPaymentMethodException("You must provide a payment method before making a payment!");
+        }
+        PaymentMethodId = paymentMethodId;
+    }
 }

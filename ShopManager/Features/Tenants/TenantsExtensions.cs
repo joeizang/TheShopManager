@@ -22,7 +22,7 @@ public static class TenantsExtensions
         else
         {
             
-            return new Tenant
+            return new Tenant(dto.SubscriptionTypeId)
             {
                 Name = dto.Name,
                 ContactName = dto.ContactName,
@@ -50,7 +50,7 @@ public static class TenantsExtensions
         }
         else
         {
-            return new Tenant
+            return new Tenant(dto.SubscriptionTypeId)
             {
                 Id = dto.TenantId,
                 Name = dto.Name,
@@ -129,5 +129,22 @@ public static class TenantsExtensions
     public static Result<SubscriptionPlanDto?> ProjectToSubscriptionPlanDtoResult(this SubscriptionPlanDto? subscriptionPlan)
     {
         return new Result<SubscriptionPlanDto?>(subscriptionPlan);
+    }
+    
+    public static TenantPaymentMethod MapToCreateTenantPaymentMethodDto(this CreateTenantPaymentMethodDto tenantPaymentMethod)
+    {
+        return new TenantPaymentMethod
+        {
+            TenantId = tenantPaymentMethod.TenantId,
+            PaymentDetails = tenantPaymentMethod.PaymentDetails,
+            IsDefaultPaymentMethod = true,
+            PaymentMethod = PaymentMethod.POS
+        };
+    }
+    
+    public static TenantPaymentMethodDto MapToTenantPaymentMethodDto(this TenantPaymentMethod tenantPaymentMethod)
+    {
+        return new TenantPaymentMethodDto(TenantId: tenantPaymentMethod.TenantId, PaymentDetails: tenantPaymentMethod.PaymentDetails,
+            IsDefaultPaymentMethod: tenantPaymentMethod.IsDefaultPaymentMethod, PaymentMethod: tenantPaymentMethod.PaymentMethod);
     }
 }
