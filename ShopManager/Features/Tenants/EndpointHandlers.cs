@@ -162,4 +162,23 @@ public static class EndpointHandlers
             r => TypedResults.NoContent(),
             error => TypedResults.NotFound());
     }
+    
+    public static async Task<IResult> CreateTenantPaymentMethod([FromBody] CreateTenantPaymentMethodDto inputModel,
+        [FromServices] ITenantPaymentMethodCommandService service)
+    {
+        var result = await service.CreateTenantPaymentMethodAsync(inputModel);
+        return result.Match<IResult>(
+            r => TypedResults.Created<TenantPaymentMethodDto>("", r),
+            error => TypedResults.InternalServerError());
+    }
+    
+    public static async Task<IResult> UpdateTenantPaymentMethod(Guid paymentMethodId, [FromBody] UpdateTenantPaymentMethodDto inputModel,
+        [FromServices] ITenantPaymentMethodCommandService service)
+    {
+        var result = await service.UpdateTenantPaymentMethodAsync(inputModel);
+        return result.Match<IResult>(
+            TypedResults.Ok,
+             TypedResults.NotFound()
+        );
+    }
 }

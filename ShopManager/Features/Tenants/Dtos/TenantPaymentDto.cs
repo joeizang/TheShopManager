@@ -5,7 +5,9 @@ namespace ShopManager.Features.Tenants.Dtos;
 public record TenantPaymentDto();
 
 
-public record CreateTenantPaymentDto();
+public record CreateTenantPaymentDto(
+    Guid TenantId, Guid TenantInvoiceId, Guid PaymentMethodId, string PaymentReference, 
+    string Description, decimal AmountPaid, PaymentStatus Status);
 
 
 public record UpdateTenantPaymentDto();
