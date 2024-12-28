@@ -8,7 +8,7 @@ public class TenantPaymentMethod : BaseDomainModel
 {
     public Guid TenantId { get; set; }
 
-    public Tenant Tenant { get; set; } = default!;
+    public Tenant Tenant { get; set; } = null!;
 
     // should this be a list of Guids?
     public List<TenantPayment> TenantPayments { get; set; } = [];
@@ -18,7 +18,7 @@ public class TenantPaymentMethod : BaseDomainModel
     public bool IsDefaultPaymentMethod { get; set; }
     
 
-    public PaymentMethod PaymentMethod { get; set; } = default!;
+    public PaymentMethod PaymentMethod { get; set; }
 
     public void UpdatePaymentMethod(UpdateTenantPaymentMethodDto dto)
     {

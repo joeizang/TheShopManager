@@ -147,4 +147,15 @@ public static class TenantsExtensions
         return new TenantPaymentMethodDto(TenantId: tenantPaymentMethod.TenantId, PaymentDetails: tenantPaymentMethod.PaymentDetails,
             IsDefaultPaymentMethod: tenantPaymentMethod.IsDefaultPaymentMethod, PaymentMethod: tenantPaymentMethod.PaymentMethod);
     }
+
+    public static TenantPayment MapToTenantPayment(this CreateTenantPaymentDto dto) =>
+        new TenantPayment(dto.PaymentMethodId)
+        {
+            TenantId = dto.TenantId,
+            Status = dto.Status,
+            Description = dto.Description,
+            PaymentReference = dto.PaymentReference,
+            AmountPaid = new Money(Currency.NGN, dto.AmountPaid),
+            TenantInvoiceId = dto.TenantInvoiceId
+        };
 }

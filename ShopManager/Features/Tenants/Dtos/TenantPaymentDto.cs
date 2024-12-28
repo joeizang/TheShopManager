@@ -10,7 +10,9 @@ public record CreateTenantPaymentDto(
     string Description, decimal AmountPaid, PaymentStatus Status);
 
 
-public record UpdateTenantPaymentDto();
+public record UpdateTenantPaymentDto(Guid TenantPaymentId, Guid TenantId, Guid TenantInvoiceId, 
+    Guid PaymentMethodId, string PaymentReference, string Description, decimal AmountPaid, 
+    PaymentStatus Status);
 
 
 public record TenantPaymentMethodDto(Guid TenantId, string PaymentDetails, 

@@ -19,15 +19,15 @@ public class TenantPayment : BaseDomainModel
 
     public Guid TenantInvoiceId { get; set; }
     
-    public TenantInvoice TenantInvoice { get; set; } = default!;
+    public TenantInvoice TenantInvoice { get; set; } = null!;
 
     public Guid PaymentMethodId { get; set; }
 
-    public TenantPaymentMethod PaymentMethod { get; set; } = default!;
+    public TenantPaymentMethod PaymentMethod { get; set; } = null!;
 
     public Guid TenantId { get; set; }
 
-    public Tenant Tenant { get; set; } = default!;
+    public Tenant Tenant { get; set; } = null!;
 
     public TenantPayment(Guid paymentMethodId)
     {
