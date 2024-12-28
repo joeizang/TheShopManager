@@ -179,4 +179,37 @@ public static class TenantsQueryService
                         spt.Price.Currency, spt.Features, spt.Discount))
                     .SingleOrDefault()
         );
+
+    public static readonly Func<ShopManagerBaseContext, Guid, IEnumerable<TenantPaymentDto>>
+        GetTenantsPayments = EF.CompileQuery(
+            (ShopManagerBaseContext context, Guid tenantId) =>
+                context.TenantPayments.AsNoTracking()
+                    .Where(tp => tp.TenantId.Equals(tenantId))
+                    .Select(tp => new TenantPaymentDto(tp.TenantId, tp.TenantInvoiceId,
+                        tp.PaymentMethodId, tp.PaymentReference, tp.Description, 
+                        tp.AmountPaid.Amount, tp.Status))
+        );
+    
+    public static readonly Func<ShopManagerBaseContext, Guid, IAsyncEnumerable<TenantPaymentDto>>
+        GetTenantsPaymentsAsync = EF.CompileAsyncQuery(
+            (ShopManagerBaseContext context, Guid tenantId) =>
+                context.TenantPayments.AsNoTracking()
+                    .Where(tp => tp.TenantId.Equals(tenantId))
+                    .Select(tp => new TenantPaymentDto(tp.TenantId, tp.TenantInvoiceId,
+                        tp.PaymentMethodId, tp.PaymentReference, tp.Description, 
+                        tp.AmountPaid.Amount, tp.Status))
+        );
+    
+    public static readonly Func<ShopManagerBaseContext, Guid, TenantPaymentInfoDto?>
+        GetTenantPaymentInfo = EF.CompileQuery(
+            (ShopManagerBaseContext context, Guid paymentId) =>
+                context.TenantPayments.AsNoTracking()
+                    .Include(tp => tp.Tenant)
+                    .Include(tp => tp.TenantInvoice)
+                    .Where(tp => tp.Id.Equals(paymentId))
+                    .Select(tp => new TenantPaymentInfoDto(tp.TenantId, tp.Tenant.Name, tp.PaymentDate.ToString(),
+                        tp.TenantInvoiceId, tp.TenantInvoice.CreatedAt.ToString(), tp.PaymentMethodId,
+                        tp.PaymentReference, tp.Description, tp.AmountPaid.Amount, tp.Status))
+                    .SingleOrDefault()
+        );
 }

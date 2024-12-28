@@ -15,6 +15,10 @@ public record UpdateTenantPaymentDto(Guid TenantPaymentId, Guid TenantId, Guid T
     Guid PaymentMethodId, string PaymentReference, string Description, decimal AmountPaid, 
     PaymentStatus Status);
 
+public record TenantPaymentInfoDto(Guid TenantId, string TenantName, string PaymentDate, Guid TenantInvoiceId,
+    string InvoiceDate, Guid PaymentMethodId, string PaymentReference, string Description,
+    decimal AmountPaid, PaymentStatus Status);
+
 
 public record TenantPaymentMethodDto(Guid TenantId, string PaymentDetails, 
     PaymentMethod PaymentMethod, bool IsDefaultPaymentMethod);
