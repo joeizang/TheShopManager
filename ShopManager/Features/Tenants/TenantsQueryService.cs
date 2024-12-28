@@ -212,4 +212,15 @@ public static class TenantsQueryService
                         tp.PaymentReference, tp.Description, tp.AmountPaid.Amount, tp.Status))
                     .SingleOrDefault()
         );
+
+    public static readonly Func<ShopManagerBaseContext, Guid, IEnumerable<TenantPaymentMethodDto>>
+        GetTenantPaymentMethods = EF.CompileQuery(
+            (ShopManagerBaseContext context, Guid tenantId) =>
+                context.TenantPaymentMethods.AsNoTracking()
+                    .Include(tpm => tpm.Tenant)
+                    .OrderByDescending(tpm => tpm.CreatedAt)
+                    .Where(tpm => tpm.TenantId.Equals(tenantId))
+                    .Select(tpm => new TenantPaymentMethodDto(tpm.TenantId, tpm.PaymentDetails,
+                        tpm.PaymentMethod, tpm.IsDefaultPaymentMethod))
+        );
 }

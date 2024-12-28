@@ -190,4 +190,12 @@ public static class EndpointHandlers
             TypedResults.NotFound
         );
     }
+    
+    public static IResult GetTenantPaymentMethods(Guid tenantId, [FromServices] ShopManagerBaseContext context)
+    {
+        List<TenantPaymentMethodDto> result = [];
+        var results = TenantsQueryService.GetTenantPaymentMethods(context, tenantId);
+        
+        return TypedResults.Ok(result);
+    }
 }
