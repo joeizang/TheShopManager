@@ -2,7 +2,8 @@ using ShopManager.Features.Shops.DomainModels;
 
 namespace ShopManager.Features.Tenants.Dtos;
 
-public record TenantPaymentDto();
+public record TenantPaymentDto(Guid TenantId, Guid TenantInvoiceId, Guid PaymentMethodId, 
+    string PaymentReference, string Description, decimal AmountPaid, PaymentStatus Status);
 
 
 public record CreateTenantPaymentDto(

@@ -15,7 +15,7 @@ public interface ITenantInvoiceCommandService
 
 public interface ITenantPaymentCommandService
 {
-    Task<Result<TenantPaymentDto>> CreateTenantPaymentAsync(CreateTenantPaymentDto dto);
+    Task<Option<TenantPaymentDto>> CreateTenantPaymentAsync(CreateTenantPaymentDto dto);
     
     Task<Result<TenantPaymentDto>> UpdateTenantPaymentAsync(UpdateTenantPaymentDto dto);
     

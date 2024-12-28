@@ -3,14 +3,27 @@ using LanguageExt.Common;
 using ShopManager.Data;
 using ShopManager.Features.Tenants.Abstractions;
 using ShopManager.Features.Tenants.Dtos;
+using Microsoft.EntityFrameworkCore;
 
 namespace ShopManager.Features.Tenants.Services;
 
 public class TenantPaymentCommandService(ShopManagerBaseContext context) : ITenantPaymentCommandService
 {
-    public async Task<Result<TenantPaymentDto>> CreateTenantPaymentAsync(CreateTenantPaymentDto dto)
+    public async Task<Option<TenantPaymentDto>> CreateTenantPaymentAsync(CreateTenantPaymentDto dto)
     {
-        throw new NotImplementedException();
+        var tpayment = dto.MapToTenantPayment();
+        context.TenantPayments.Add(tpayment);
+        await context.SaveChangesAsync();
+        var newPayment = await context
+            .TenantPayments.AsNoTracking()
+            .OrderByDescending(tp => tp.CreatedAt)
+            .Where(tp => tp.Id.Equals(tpayment.Id))
+            .Select(tp => new TenantPaymentDto(
+                tp.TenantId, tp.TenantInvoiceId, tp.PaymentMethodId, tp.PaymentReference,
+                tp.Description, tp.AmountPaid.Amount, tp.Status))
+            .SingleOrDefaultAsync()
+            .ConfigureAwait(false);
+        return newPayment is not null ? Option<TenantPaymentDto>.Some(newPayment) : Option<TenantPaymentDto>.None;
     }
 
     public async Task<Result<TenantPaymentDto>> UpdateTenantPaymentAsync(UpdateTenantPaymentDto dto)
