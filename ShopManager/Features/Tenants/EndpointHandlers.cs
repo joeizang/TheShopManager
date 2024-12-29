@@ -181,6 +181,7 @@ public static class EndpointHandlers
              TypedResults.NotFound()
         );
     }
+
     
     public static IResult GetTenantPaymentMethodByTenantId(Guid tenantId,
         [FromServices] ShopManagerBaseContext context)
@@ -197,12 +198,21 @@ public static class EndpointHandlers
         return TypedResults.Ok(result);
     }
     
-    public static async Task<IResult> DeleteTenantPaymentMethod(Guid tenantPaymentMethodId,
+
+    public static async Task<IResult> DeleteTenantPaymentMethod(Guid paymentMethodId,
         [FromServices] ITenantPaymentMethodCommandService service)
     {
-        var result = await service.DeleteTenantPaymentMethodAsync(tenantPaymentMethodId);
-        return result.Match<IResult>(
-            r => TypedResults.NoContent(),
-            TypedResults.NotFound);
+        var result = await service.DeleteTenantPaymentMethodAsync(paymentMethodId);
+        return result.Match<IResult>( r => TypedResults.NoContent(),
+            TypedResults.NotFound
+        );
+    }
+    
+    public static IResult GetTenantPaymentMethods(Guid tenantId, [FromServices] ShopManagerBaseContext context)
+    {
+        List<TenantPaymentMethodDto> result = [];
+        var results = TenantsQueryService.GetTenantPaymentMethods(context, tenantId);
+        
+        return TypedResults.Ok(result);
     }
 }

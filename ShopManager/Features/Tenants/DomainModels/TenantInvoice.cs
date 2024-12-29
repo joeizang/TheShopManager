@@ -15,7 +15,7 @@ public class TenantInvoice : BaseDomainModel
 
     public InvoiceStatus InvoiceStatus { get; set; } = InvoiceStatus.NOT_PAYED;
 
-    public SubscriptionPlanType SubscriptionPlanType { get; set; } = default!;
+    public SubscriptionPlanType SubscriptionPlanType { get; set; } = null!;
     
     public Guid SubscriptionPlanTypeId { get; set; }
 

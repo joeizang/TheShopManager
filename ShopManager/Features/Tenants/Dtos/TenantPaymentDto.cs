@@ -3,6 +3,7 @@ using ShopManager.Features.Shops.DomainModels;
 
 namespace ShopManager.Features.Tenants.Dtos;
 
+
 public record TenantPaymentDto(Guid TenantPaymentId, Guid TenantId, Guid TenantInvoiceId, 
     Guid PaymentMethodId, string PaymentReference, string Description, decimal AmountPaid, 
     PaymentStatus Status, string PaymentDate);
@@ -13,7 +14,13 @@ public record CreateTenantPaymentDto(
     string Description, decimal AmountPaid, PaymentStatus Status, string PaymentDate);
 
 
-public record UpdateTenantPaymentDto();
+public record UpdateTenantPaymentDto(Guid TenantPaymentId, Guid TenantId, Guid TenantInvoiceId, 
+    Guid PaymentMethodId, string PaymentReference, string Description, decimal AmountPaid, 
+    PaymentStatus Status);
+
+public record TenantPaymentInfoDto(Guid TenantId, string TenantName, string PaymentDate, Guid TenantInvoiceId,
+    string InvoiceDate, Guid PaymentMethodId, string PaymentReference, string Description,
+    decimal AmountPaid, PaymentStatus Status);
 
 
 public record TenantPaymentMethodDto(Guid TenantId, string PaymentDetails, 

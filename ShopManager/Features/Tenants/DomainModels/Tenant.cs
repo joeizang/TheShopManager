@@ -107,7 +107,7 @@ public class Tenant : BaseDomainModel
     
     
     // what does settling an invoice mean?
-    public object SettleLatestInvoice()
+    public Option<TenantPayment> SettleLatestInvoice()
     {
         //get the latest invoice
         var latestInvoice = TenantInvoices
@@ -116,7 +116,7 @@ public class Tenant : BaseDomainModel
         
         if(latestInvoice is null)
         {
-            return Option<TenantInvoice>.None;
+            return Option<TenantPayment>.None; //there is nothing to pay
         }
 
         var paymentMethodId = PaymentMethods
