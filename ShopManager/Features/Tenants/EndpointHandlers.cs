@@ -30,7 +30,7 @@ public static class EndpointHandlers
     public static async Task<IResult> GetTenants([FromServices] ShopManagerBaseContext context)
     {
         var result = new List<TenantDto>();
-        await foreach (var tenant in TenantsQueryService.GetTenants(context))
+        await foreach (var tenant in TenantsQueryService.GetTenantsAsync(context))
         {
             result.Add(tenant);
         }
@@ -44,7 +44,7 @@ public static class EndpointHandlers
             return Results.BadRequest("Invalid cursor");
         }
         var result = new List<TenantDto>();
-        await foreach(var tenant in TenantsQueryService.GetCursoredTenants(context, parsedCursor))
+        await foreach(var tenant in TenantsQueryService.GetCursoredTenantsAsync(context, parsedCursor))
         {
             result.Add(tenant);
         }
@@ -61,7 +61,7 @@ public static class EndpointHandlers
         [FromServices] ShopManagerBaseContext context)
     {
         List<SubscriptionPlanDto> result = [];
-        await foreach (var plan in TenantsQueryService.GetSubscriptionPlanForTenant(context, tenantId))
+        await foreach (var plan in TenantsQueryService.GetSubscriptionPlanForTenantAsync(context, tenantId))
         {
             result.Add(plan);
         }
@@ -97,7 +97,7 @@ public static class EndpointHandlers
     public static async Task<IResult> GetSubscriptionPlans([FromServices] ShopManagerBaseContext context)
     {
         List<SubscriptionPlanDto> result = [];
-        await foreach (var plan in TenantsQueryService.GetSubscriptionPlans(context))
+        await foreach (var plan in TenantsQueryService.GetSubscriptionPlansAsync(context))
         {
             result.Add(plan);
         }
@@ -108,7 +108,7 @@ public static class EndpointHandlers
     public static async Task<IResult> GetCursoredSubscriptionPlans(string cursor, [FromServices] ShopManagerBaseContext context)
     {
         List<SubscriptionPlanDto> result = [];
-        await foreach(var plan in TenantsQueryService.GetCursoredSubscriptionPlans(context, cursor.ToInstantDate()))
+        await foreach(var plan in TenantsQueryService.GetCursoredSubscriptionPlansAsync(context, cursor.ToInstantDate()))
         {
             result.Add(plan);
         }
@@ -118,7 +118,7 @@ public static class EndpointHandlers
     public static async Task<IResult> GetSubscriptionPlanTypes([FromServices] ShopManagerBaseContext context)
     {
         List<SubscriptionPlanTypeDto> result = [];
-        await foreach (var planType in TenantsQueryService.GetSubscriptionPlanTypes(context))
+        await foreach (var planType in TenantsQueryService.GetSubscriptionPlanTypesAsync(context))
         {
             result.Add(planType);
         }
@@ -129,7 +129,7 @@ public static class EndpointHandlers
     public static async Task<IResult> GetCursoredSubscriptionPlanTypes(string cursor, [FromServices] ShopManagerBaseContext context)
     {
         List<SubscriptionPlanTypeDto> result = [];
-        await foreach (var planType in TenantsQueryService.GetCursoredSubscriptionPlanTypes(context, cursor.ToInstantDate()))
+        await foreach (var planType in TenantsQueryService.GetCursoredSubscriptionPlanTypesAsync(context, cursor.ToInstantDate()))
         {
             result.Add(planType);
         }
@@ -180,5 +180,29 @@ public static class EndpointHandlers
             TypedResults.Ok,
              TypedResults.NotFound()
         );
+    }
+    
+    public static IResult GetTenantPaymentMethodByTenantId(Guid tenantId,
+        [FromServices] ShopManagerBaseContext context)
+    {
+        var result = TenantsQueryService
+            .GetTenantPaymentMethodByTenantId(context, tenantId);
+        return result is not null ? TypedResults.Ok(result) : TypedResults.NotFound();
+    }
+
+    public static IResult GetTenantPaymentsByTenantId(Guid tenantId,
+        [FromServices] ShopManagerBaseContext context)
+    {
+        var result = TenantsQueryService.GetTenantPaymentsByTenantId(context, tenantId);
+        return TypedResults.Ok(result);
+    }
+    
+    public static async Task<IResult> DeleteTenantPaymentMethod(Guid tenantPaymentMethodId,
+        [FromServices] ITenantPaymentMethodCommandService service)
+    {
+        var result = await service.DeleteTenantPaymentMethodAsync(tenantPaymentMethodId);
+        return result.Match<IResult>(
+            r => TypedResults.NoContent(),
+            TypedResults.NotFound);
     }
 }

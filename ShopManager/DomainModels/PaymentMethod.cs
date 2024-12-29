@@ -1,4 +1,4 @@
-namespace ShopManager.Features.Shops.DomainModels;
+namespace ShopManager.DomainModels;
 
 public enum PaymentMethod
 {

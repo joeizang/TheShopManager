@@ -9,7 +9,7 @@ public class TenantPaymentCommandService : ITenantPaymentCommandService
 {
     public async Task<Result<TenantPaymentDto>> CreateTenantPaymentAsync(CreateTenantPaymentDto dto)
     {
-        throw new NotImplementedException();
+        var tenantPayment = dto.MapToTenantPayment();
     }
 
     public async Task<Result<TenantPaymentDto>> UpdateTenantPaymentAsync(UpdateTenantPaymentDto dto)
