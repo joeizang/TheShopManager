@@ -182,6 +182,23 @@ public static class EndpointHandlers
         );
     }
 
+    
+    public static IResult GetTenantPaymentMethodByTenantId(Guid tenantId,
+        [FromServices] ShopManagerBaseContext context)
+    {
+        var result = TenantsQueryService
+            .GetTenantPaymentMethodByTenantId(context, tenantId);
+        return result is not null ? TypedResults.Ok(result) : TypedResults.NotFound();
+    }
+
+    public static IResult GetTenantPaymentsByTenantId(Guid tenantId,
+        [FromServices] ShopManagerBaseContext context)
+    {
+        var result = TenantsQueryService.GetTenantPaymentsByTenantId(context, tenantId);
+        return TypedResults.Ok(result);
+    }
+    
+
     public static async Task<IResult> DeleteTenantPaymentMethod(Guid paymentMethodId,
         [FromServices] ITenantPaymentMethodCommandService service)
     {

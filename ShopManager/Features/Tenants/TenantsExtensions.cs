@@ -1,6 +1,7 @@
 using LanguageExt.Common;
 using NodaTime;
 using NodaTime.Text;
+using ShopManager.Core;
 using ShopManager.DomainModels;
 using ShopManager.Features.Shops.DomainModels;
 using ShopManager.Features.Tenants.Dtos;
@@ -147,15 +148,19 @@ public static class TenantsExtensions
         return new TenantPaymentMethodDto(TenantId: tenantPaymentMethod.TenantId, PaymentDetails: tenantPaymentMethod.PaymentDetails,
             IsDefaultPaymentMethod: tenantPaymentMethod.IsDefaultPaymentMethod, PaymentMethod: tenantPaymentMethod.PaymentMethod);
     }
-
-    public static TenantPayment MapToTenantPayment(this CreateTenantPaymentDto dto) =>
-        new TenantPayment(dto.PaymentMethodId)
+    
+    public static TenantPayment MapToTenantPayment(this CreateTenantPaymentDto dto, Guid paymentMethodId)
+    {
+        return new TenantPayment(paymentMethodId)
         {
             TenantId = dto.TenantId,
-            Status = dto.Status,
-            Description = dto.Description,
+            TenantInvoiceId = dto.TenantInvoiceId,
+            PaymentMethodId = dto.PaymentMethodId,
             PaymentReference = dto.PaymentReference,
-            AmountPaid = new Money(Currency.NGN, dto.AmountPaid),
-            TenantInvoiceId = dto.TenantInvoiceId
+            Description = dto.Description,
+            AmountPaid = new Money( Currency.NGN, dto.AmountPaid),
+            Status = dto.Status,
+            PaymentDate = dto.PaymentDate.ToInstantDate()
         };
+    }
 }
