@@ -46,7 +46,6 @@ public class ProductEntityTypeConfiguration : IEntityTypeConfiguration<Product>
 
         builder.HasMany(p => p.Categories)
             .WithOne()
-            .HasForeignKey(p => p.CategoryId)
             .OnDelete(DeleteBehavior.NoAction);
 
         builder.HasOne(p => p.FairlyUsedItem)
@@ -62,7 +61,6 @@ public class ProductEntityTypeConfiguration : IEntityTypeConfiguration<Product>
             .IsUnique();
         builder.HasIndex(p => p.ShopId);
         builder.HasIndex(p => p.SupplierId);
-        builder.HasIndex(p => p.CategoryId);
         builder.HasIndex(p => p.CreatedAt);
     }
 }
