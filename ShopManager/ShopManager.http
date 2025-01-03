@@ -16,14 +16,35 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "ShopName": "Shop 2",
-  "ShopAddress": "Shop 2 Address",
+  "ShopName": "Ushim's Baby Shop",
+  "ShopAddress": "Ushim's Towers, Floor 3, 1st.",
   "ShopPhoneNumber": "12388767890",
-  "ShopEmail": "shop2email.@bizdevomatics.xyz",
+  "ShopEmail": "rumic@ushimsbabyworld.com",
   "CacRegistrationNumber": "RC123996",
-  "ShopDescription": "Shop 2 Description",
-  "ShopLogo": "Shop 2 Logo",
-  "TaxIdentificationNumber": "TIN5564456"
+  "ShopDescription": "Ushim's Towers",
+  "ShopLogo": "Ushim's Baby World Logo",
+  "TaxIdentificationNumber": "TIN5564456",
+  "TenantId": "019429dd-ddb6-3e20-a1f8-4add721e4d19"
+}
+
+###
+
+### Update a shop
+PUT {{ShopManager_HostAddress}}/shops/019429ea-970b-057f-fbed-e11a747f8bc7
+Accept: application/json
+Content-Type: application/json
+
+{
+  "ShopId": "019429ea-970b-057f-fbed-e11a747f8bc7",
+  "ShopName": "Ushim's Baby World",
+  "ShopAddress": "Ushim's Towers, Floor 3, 1st.",
+  "ShopPhoneNumber": "12388767890",
+  "ShopEmailAddress": "rumic@ushimsbabyworld.com",
+  "CacRegNumber": "RC121987",
+  "ShopDescription": "Ushim's Baby World has the best baby products in the market.",
+  "ShopLogo": "Ushim's Baby World Logo",
+  "TaxId": "TIN55644270556",
+  "TenantId": "019429dd-ddb6-3e20-a1f8-4add721e4d19"
 }
 
 ###
@@ -42,7 +63,8 @@ Content-Type: application/json
   "CacRegNumber": "RC123996",
   "ShopDescription": "We repairs all kinds of computers and sell computers also",
   "ShopLogo": "Shop 2 Logo",
-  "TaxId": "TIN5564456"
+  "TaxId": "TIN5564456",
+  "TenantId": "019429dd-ddb6-3e20-a1f8-4add721e4d19"
 }
 
 ###
@@ -58,6 +80,19 @@ Content-Type: application/json
 
 ###
 
+### Create a Category
+POST {{ShopManager_HostAddress}}/shops/categories/
+Accept: application/json
+Content-Type: application/json
+
+{
+  "Name": "Onesies",
+  "Description": "Pin down for babies",
+  "ShopId": "019429ea-970b-057f-fbed-e11a747f8bc7"
+}
+
+###
+
 ### Get Tenants
 GET {{ShopManager_HostAddress}}/tenants
 Accept: application/json
@@ -65,7 +100,7 @@ Accept: application/json
 ###
 
 ### Get next n Tenants cursored by createdAt Instant
-GET {{ShopManager_HostAddress}}/
+GET {{ShopManager_HostAddress}}/tenants/all
 
 ### Create a new tenant
 POST {{ShopManager_HostAddress}}/tenants/
@@ -84,6 +119,28 @@ Content-Type: application/json
   "SubscriptionStartDate": "2024-09-21T23:06:57.174Z",
   "SubscriptionEndDate": "2024-11-19T23:06:57.174Z",
   "PaymentStatus": 1
+}
+
+###
+
+### Create a new tenant
+POST {{ShopManager_HostAddress}}/tenants/
+Accept: application/json
+Content-Type: application/json
+
+{
+  "Name": "Ruth Izang",
+  "ContactName": "Ruth Izang",
+  "EmailAddress": "rumic8080@gmail.com",
+  "PhoneNumber": "08034567890",
+  "Address": "Ushim's Baby World, Rwang Pam street, Jos, Plateau State",
+  "BillingAddress": "Ushim's Baby World, Rwang Pam street, Jos, Plateau State",
+  "ActivationStatus": 0,
+  "NextBillingDate": "2025-02-01T23:06:57.174Z",
+  "SubscriptionStartDate": "2025-01-03T01:38:50.185Z",
+  "SubscriptionEndDate": "2025-02-04T01:38:50.185Z",
+  "PaymentStatus": 1,
+  "SubscriptionPlanTypeId": "019429d4-9da6-9d50-929f-d6fd1dc62ec7"
 }
 
 ###

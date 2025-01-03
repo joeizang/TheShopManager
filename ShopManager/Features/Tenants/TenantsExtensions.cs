@@ -23,7 +23,7 @@ public static class TenantsExtensions
         else
         {
             
-            return new Tenant(dto.SubscriptionTypeId)
+            var newTenant = new Tenant(dto.SubscriptionPlanTypeId)
             {
                 Name = dto.Name,
                 ContactName = dto.ContactName,
@@ -31,12 +31,13 @@ public static class TenantsExtensions
                 PhoneNumber = dto.PhoneNumber,
                 Address = dto.Address,
                 BillingAddress = dto.BillingAddress,
-                ActivationStatus = dto.ActivationStatus,
+                ActivationStatus = ActivationStatus.INACTIVE,
                 // NextBillingDate = parsedNextBillingDate,
                 SubscriptionStartDate = parsedStartDate,
                 SubscriptionEndDate = parsedEndDate,
                 PaymentStatus = PaymentStatus.UNINITIALIZED
             };
+            return newTenant;
         }
     }
 

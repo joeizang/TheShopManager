@@ -12,22 +12,22 @@ public class TenantPaymentCommandService(ShopManagerBaseContext context) : ITena
 {
     public async Task<Option<TenantPaymentDto>> CreateTenantPaymentAsync(CreateTenantPaymentDto dto)
     {
-        var tpayment = dto.MapToTenantPayment();
+        var tpayment = dto.MapToTenantPayment(dto.PaymentMethodId);
         context.TenantPayments.Add(tpayment);
         await context.SaveChangesAsync();
         var newPayment = await context
             .TenantPayments.AsNoTracking()
             .OrderByDescending(tp => tp.CreatedAt)
             .Where(tp => tp.Id.Equals(tpayment.Id))
-            .Select(tp => new TenantPaymentDto(
+            .Select(tp => new TenantPaymentDto(tp.Id,
                 tp.TenantId, tp.TenantInvoiceId, tp.PaymentMethodId, tp.PaymentReference,
-                tp.Description, tp.AmountPaid.Amount, tp.Status))
+                 tp.Description,tp.AmountPaid.Amount, tp.Status, tp.CreatedAt.ToString()))
             .SingleOrDefaultAsync()
             .ConfigureAwait(false);
         return newPayment is not null ? Option<TenantPaymentDto>.Some(newPayment) : Option<TenantPaymentDto>.None;
     }
 
-    public async Task<Result<TenantPaymentDto>> UpdateTenantPaymentAsync(UpdateTenantPaymentDto dto)
+    public Task<Result<TenantPaymentDto>> UpdateTenantPaymentAsync(UpdateTenantPaymentDto dto)
     {
         throw new NotImplementedException();
     }

@@ -1,9 +1,8 @@
-using System;
 using LanguageExt.Common;
 using Microsoft.EntityFrameworkCore;
 using ShopManager.Data;
 
-namespace ShopManager.Features.Shops;
+namespace ShopManager.Features.Shops.Services;
 
 public class ShopsCommandService(ShopManagerBaseContext context) : IShopCommandService
 {

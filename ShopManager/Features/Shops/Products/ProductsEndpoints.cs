@@ -10,22 +10,19 @@ public static class ProductsEndpoint
         var productsGroup = routes.MapGroup("/api/v1/products");
         var productsGroupWithIds = productsGroup.MapGroup("/{shopId:Guid}");
 
-        productsGroup.MapGet("", async ([FromServices]ShopManagerBaseContext context,
+        productsGroup.MapGet("", ([FromServices]ShopManagerBaseContext context,
             [FromQuery]string cursor) =>
         {
-            if (!Guid.TryParse(cursor, out Guid parsedCursor))
-            {
-                return Results.BadRequest("Invalid cursor");
-            }
-            var products = new List<object>();
-
-            await foreach (var product in ProductsQueryService.GetProducts(context, parsedCursor))
-            {
-                products.Add(product);
-            }
+            Guid.TryParse(cursor, out Guid parsedCursor);
+            var products= ProductsQueryService.GetProducts(context, parsedCursor);
 
             return Results.Ok(products);
-        });
+        }).AddEndpointFilter((async (context, next) =>
+        {
+            var cursor = context.GetArgument<string>(1);
+            Guid.TryParse(cursor, out Guid parsedCursor);
+            return parsedCursor == Guid.Empty ? Results.BadRequest("Invalid Id") : await next(context);
+        }));
 
         return productsGroup;
     }

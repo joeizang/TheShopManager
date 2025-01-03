@@ -270,7 +270,7 @@ namespace ShopManager.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("ShopManager.DomainModels.Category", b =>
+            modelBuilder.Entity("ShopManager.Features.Shops.DomainModels.Category", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -293,6 +293,9 @@ namespace ShopManager.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
+                    b.Property<Guid?>("ProductId")
+                        .HasColumnType("uuid");
+
                     b.Property<Guid>("ShopId")
                         .HasColumnType("uuid");
 
@@ -307,16 +310,16 @@ namespace ShopManager.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoryId");
-
                     b.HasIndex("CategoryName");
+
+                    b.HasIndex("ProductId");
 
                     b.HasIndex("ShopId");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("ShopManager.DomainModels.Customer", b =>
+            modelBuilder.Entity("ShopManager.Features.Shops.DomainModels.Customer", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -374,10 +377,10 @@ namespace ShopManager.Migrations
 
                     b.HasIndex("FirstName", "LastName");
 
-                    b.ToTable("Customers", (string)null);
+                    b.ToTable("Customers");
                 });
 
-            modelBuilder.Entity("ShopManager.DomainModels.FairlyUsedItem", b =>
+            modelBuilder.Entity("ShopManager.Features.Shops.DomainModels.FairlyUsedItem", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -435,7 +438,7 @@ namespace ShopManager.Migrations
                         .HasColumnType("xid")
                         .HasColumnName("xmin");
 
-                    b.ComplexProperty<Dictionary<string, object>>("Price", "ShopManager.DomainModels.FairlyUsedItem.Price#Money", b1 =>
+                    b.ComplexProperty<Dictionary<string, object>>("Price", "ShopManager.Features.Shops.DomainModels.FairlyUsedItem.Price#Money", b1 =>
                         {
                             b1.IsRequired();
 
@@ -458,10 +461,10 @@ namespace ShopManager.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("FairlyUsedItems", (string)null);
+                    b.ToTable("FairlyUsedItems");
                 });
 
-            modelBuilder.Entity("ShopManager.DomainModels.Inventory", b =>
+            modelBuilder.Entity("ShopManager.Features.Shops.DomainModels.Inventory", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -506,10 +509,10 @@ namespace ShopManager.Migrations
 
                     b.HasIndex("ShopId");
 
-                    b.ToTable("Inventories", (string)null);
+                    b.ToTable("Inventories");
                 });
 
-            modelBuilder.Entity("ShopManager.DomainModels.Payment", b =>
+            modelBuilder.Entity("ShopManager.Features.Shops.DomainModels.Payment", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -550,7 +553,7 @@ namespace ShopManager.Migrations
                         .HasColumnType("xid")
                         .HasColumnName("xmin");
 
-                    b.ComplexProperty<Dictionary<string, object>>("AmountPaid", "ShopManager.DomainModels.Payment.AmountPaid#Money", b1 =>
+                    b.ComplexProperty<Dictionary<string, object>>("AmountPaid", "ShopManager.Features.Shops.DomainModels.Payment.AmountPaid#Money", b1 =>
                         {
                             b1.IsRequired();
 
@@ -571,16 +574,13 @@ namespace ShopManager.Migrations
 
                     b.HasIndex("ShopId");
 
-                    b.ToTable("Payments", (string)null);
+                    b.ToTable("Payments");
                 });
 
-            modelBuilder.Entity("ShopManager.DomainModels.Product", b =>
+            modelBuilder.Entity("ShopManager.Features.Shops.DomainModels.Product", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("CategoryId")
                         .HasColumnType("uuid");
 
                     b.Property<Instant>("CreatedAt")
@@ -625,7 +625,7 @@ namespace ShopManager.Migrations
                         .HasColumnType("xid")
                         .HasColumnName("xmin");
 
-                    b.ComplexProperty<Dictionary<string, object>>("CostPrice", "ShopManager.DomainModels.Product.CostPrice#Money", b1 =>
+                    b.ComplexProperty<Dictionary<string, object>>("CostPrice", "ShopManager.Features.Shops.DomainModels.Product.CostPrice#Money", b1 =>
                         {
                             b1.IsRequired();
 
@@ -636,7 +636,7 @@ namespace ShopManager.Migrations
                                 .HasColumnType("currency");
                         });
 
-                    b.ComplexProperty<Dictionary<string, object>>("SellingPrice", "ShopManager.DomainModels.Product.SellingPrice#Money", b1 =>
+                    b.ComplexProperty<Dictionary<string, object>>("SellingPrice", "ShopManager.Features.Shops.DomainModels.Product.SellingPrice#Money", b1 =>
                         {
                             b1.IsRequired();
 
@@ -648,8 +648,6 @@ namespace ShopManager.Migrations
                         });
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
 
                     b.HasIndex("CreatedAt");
 
@@ -662,140 +660,10 @@ namespace ShopManager.Migrations
 
                     b.HasIndex("SupplierId");
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("ShopManager.DomainModels.Sale", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Instant>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid?>("CustomerId")
-                        .HasColumnType("uuid");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<ZonedDateTime>("SaleDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("SaleId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("SalesPersonId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("ShopId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Instant>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<uint>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
-
-                    b.ComplexProperty<Dictionary<string, object>>("TotalAmount", "ShopManager.DomainModels.Sale.TotalAmount#Money", b1 =>
-                        {
-                            b1.IsRequired();
-
-                            b1.Property<decimal>("amount")
-                                .HasColumnType("numeric");
-
-                            b1.Property<Currency>("currency")
-                                .HasColumnType("currency");
-                        });
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedAt");
-
-                    b.HasIndex("CustomerId");
-
-                    b.HasIndex("SaleDate");
-
-                    b.HasIndex("SalesPersonId");
-
-                    b.HasIndex("ShopId");
-
-                    b.ToTable("Sales", (string)null);
-                });
-
-            modelBuilder.Entity("ShopManager.DomainModels.SaleItem", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Instant>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("uuid");
-
-                    b.Property<double>("QuantitySold")
-                        .HasPrecision(10, 2)
-                        .HasColumnType("double precision");
-
-                    b.Property<Guid>("SaleId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("ShopId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Instant>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<uint>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
-
-                    b.ComplexProperty<Dictionary<string, object>>("TotalAmount", "ShopManager.DomainModels.SaleItem.TotalAmount#Money", b1 =>
-                        {
-                            b1.IsRequired();
-
-                            b1.Property<decimal>("amount")
-                                .HasColumnType("numeric");
-
-                            b1.Property<Currency>("currency")
-                                .HasColumnType("currency");
-                        });
-
-                    b.ComplexProperty<Dictionary<string, object>>("UnitPrice", "ShopManager.DomainModels.SaleItem.UnitPrice#Money", b1 =>
-                        {
-                            b1.IsRequired();
-
-                            b1.Property<decimal>("amount")
-                                .HasColumnType("numeric");
-
-                            b1.Property<Currency>("currency")
-                                .HasColumnType("currency");
-                        });
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("SaleId");
-
-                    b.HasIndex("ShopId");
-
-                    b.ToTable("SaleItems", (string)null);
-                });
-
-            modelBuilder.Entity("ShopManager.DomainModels.Shop", b =>
+            modelBuilder.Entity("ShopManager.Features.Shops.DomainModels.Shop", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -866,10 +734,10 @@ namespace ShopManager.Migrations
 
                     b.HasIndex("TenantId");
 
-                    b.ToTable("Shops", (string)null);
+                    b.ToTable("Shops");
                 });
 
-            modelBuilder.Entity("ShopManager.DomainModels.Supplier", b =>
+            modelBuilder.Entity("ShopManager.Features.Shops.DomainModels.Supplier", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -920,7 +788,137 @@ namespace ShopManager.Migrations
                     b.HasIndex("SupplierName", "ShopId")
                         .IsUnique();
 
-                    b.ToTable("Suppliers", (string)null);
+                    b.ToTable("Suppliers");
+                });
+
+            modelBuilder.Entity("ShopManager.Features.Shops.Sales.DomainModels.Sale", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Instant>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("CustomerId")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<ZonedDateTime>("SaleDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("SaleId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("SalesPersonId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("ShopId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Instant>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.ComplexProperty<Dictionary<string, object>>("TotalAmount", "ShopManager.Features.Shops.Sales.DomainModels.Sale.TotalAmount#Money", b1 =>
+                        {
+                            b1.IsRequired();
+
+                            b1.Property<decimal>("amount")
+                                .HasColumnType("numeric");
+
+                            b1.Property<Currency>("currency")
+                                .HasColumnType("currency");
+                        });
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("SaleDate");
+
+                    b.HasIndex("SalesPersonId");
+
+                    b.HasIndex("ShopId");
+
+                    b.ToTable("Sales");
+                });
+
+            modelBuilder.Entity("ShopManager.Features.Shops.Sales.DomainModels.SaleItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Instant>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uuid");
+
+                    b.Property<double>("QuantitySold")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("double precision");
+
+                    b.Property<Guid>("SaleId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ShopId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Instant>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.ComplexProperty<Dictionary<string, object>>("TotalAmount", "ShopManager.Features.Shops.Sales.DomainModels.SaleItem.TotalAmount#Money", b1 =>
+                        {
+                            b1.IsRequired();
+
+                            b1.Property<decimal>("amount")
+                                .HasColumnType("numeric");
+
+                            b1.Property<Currency>("currency")
+                                .HasColumnType("currency");
+                        });
+
+                    b.ComplexProperty<Dictionary<string, object>>("UnitPrice", "ShopManager.Features.Shops.Sales.DomainModels.SaleItem.UnitPrice#Money", b1 =>
+                        {
+                            b1.IsRequired();
+
+                            b1.Property<decimal>("amount")
+                                .HasColumnType("numeric");
+
+                            b1.Property<Currency>("currency")
+                                .HasColumnType("currency");
+                        });
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("SaleId");
+
+                    b.HasIndex("ShopId");
+
+                    b.ToTable("SaleItems");
                 });
 
             modelBuilder.Entity("ShopManager.Features.Tenants.DomainModels.SubscriptionPlan", b =>
@@ -961,7 +959,7 @@ namespace ShopManager.Migrations
 
                     b.HasIndex("TenantId");
 
-                    b.ToTable("SubscriptionPlans", (string)null);
+                    b.ToTable("SubscriptionPlans");
                 });
 
             modelBuilder.Entity("ShopManager.Features.Tenants.DomainModels.SubscriptionPlanType", b =>
@@ -1018,7 +1016,7 @@ namespace ShopManager.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SubscriptionPlanTypes", (string)null);
+                    b.ToTable("SubscriptionPlanTypes");
                 });
 
             modelBuilder.Entity("ShopManager.Features.Tenants.DomainModels.Tenant", b =>
@@ -1027,10 +1025,10 @@ namespace ShopManager.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<bool>("ActivationStatus")
+                    b.Property<ActivationStatus>("ActivationStatus")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false);
+                        .HasColumnType("activation_status")
+                        .HasDefaultValue(ActivationStatus.INACTIVE);
 
                     b.Property<string>("Address")
                         .IsRequired()
@@ -1096,7 +1094,7 @@ namespace ShopManager.Migrations
                     b.HasIndex("EmailAddress")
                         .IsUnique();
 
-                    b.ToTable("Tenants", (string)null);
+                    b.ToTable("Tenants");
                 });
 
             modelBuilder.Entity("ShopManager.Features.Tenants.DomainModels.TenantInvoice", b =>
@@ -1125,6 +1123,9 @@ namespace ShopManager.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
+
+                    b.Property<Guid>("SubscriptionPlanTypeId")
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("TenantId")
                         .HasColumnType("uuid");
@@ -1156,9 +1157,11 @@ namespace ShopManager.Migrations
                     b.HasIndex("InvoiceReference")
                         .IsUnique();
 
+                    b.HasIndex("SubscriptionPlanTypeId");
+
                     b.HasIndex("TenantId");
 
-                    b.ToTable("TenantInvoices", (string)null);
+                    b.ToTable("TenantInvoices");
                 });
 
             modelBuilder.Entity("ShopManager.Features.Tenants.DomainModels.TenantPayment", b =>
@@ -1194,6 +1197,9 @@ namespace ShopManager.Migrations
                     b.Property<Guid>("TenantId")
                         .HasColumnType("uuid");
 
+                    b.Property<Guid>("TenantInvoiceId")
+                        .HasColumnType("uuid");
+
                     b.Property<Instant>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -1224,7 +1230,9 @@ namespace ShopManager.Migrations
 
                     b.HasIndex("TenantId");
 
-                    b.ToTable("TenantPayments", (string)null);
+                    b.HasIndex("TenantInvoiceId");
+
+                    b.ToTable("TenantPayments");
                 });
 
             modelBuilder.Entity("ShopManager.Features.Tenants.DomainModels.TenantPaymentMethod", b =>
@@ -1265,7 +1273,7 @@ namespace ShopManager.Migrations
 
                     b.HasIndex("TenantId");
 
-                    b.ToTable("TenantPaymentMethods", (string)null);
+                    b.ToTable("TenantPaymentMethods");
                 });
 
             modelBuilder.Entity("ShopManager.DomainModels.ApplicationRole", b =>
@@ -1354,7 +1362,7 @@ namespace ShopManager.Migrations
 
             modelBuilder.Entity("ShopManager.DomainModels.ApplicationUser", b =>
                 {
-                    b.HasOne("ShopManager.DomainModels.Shop", "Shop")
+                    b.HasOne("ShopManager.Features.Shops.DomainModels.Shop", "Shop")
                         .WithMany()
                         .HasForeignKey("ShopId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1363,15 +1371,14 @@ namespace ShopManager.Migrations
                     b.Navigation("Shop");
                 });
 
-            modelBuilder.Entity("ShopManager.DomainModels.Category", b =>
+            modelBuilder.Entity("ShopManager.Features.Shops.DomainModels.Category", b =>
                 {
-                    b.HasOne("ShopManager.DomainModels.Product", null)
+                    b.HasOne("ShopManager.Features.Shops.DomainModels.Product", null)
                         .WithMany("Categories")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
-                    b.HasOne("ShopManager.DomainModels.Shop", "Shop")
+                    b.HasOne("ShopManager.Features.Shops.DomainModels.Shop", "Shop")
                         .WithMany()
                         .HasForeignKey("ShopId")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -1380,9 +1387,9 @@ namespace ShopManager.Migrations
                     b.Navigation("Shop");
                 });
 
-            modelBuilder.Entity("ShopManager.DomainModels.Customer", b =>
+            modelBuilder.Entity("ShopManager.Features.Shops.DomainModels.Customer", b =>
                 {
-                    b.HasOne("ShopManager.DomainModels.Shop", "Shop")
+                    b.HasOne("ShopManager.Features.Shops.DomainModels.Shop", "Shop")
                         .WithMany()
                         .HasForeignKey("ShopId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1391,21 +1398,21 @@ namespace ShopManager.Migrations
                     b.Navigation("Shop");
                 });
 
-            modelBuilder.Entity("ShopManager.DomainModels.FairlyUsedItem", b =>
+            modelBuilder.Entity("ShopManager.Features.Shops.DomainModels.FairlyUsedItem", b =>
                 {
-                    b.HasOne("ShopManager.DomainModels.Customer", "Customer")
+                    b.HasOne("ShopManager.Features.Shops.DomainModels.Customer", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ShopManager.DomainModels.Product", "Product")
+                    b.HasOne("ShopManager.Features.Shops.DomainModels.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ShopManager.DomainModels.Shop", "Shop")
+                    b.HasOne("ShopManager.Features.Shops.DomainModels.Shop", "Shop")
                         .WithMany()
                         .HasForeignKey("ShopId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1426,15 +1433,15 @@ namespace ShopManager.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("ShopManager.DomainModels.Inventory", b =>
+            modelBuilder.Entity("ShopManager.Features.Shops.DomainModels.Inventory", b =>
                 {
-                    b.HasOne("ShopManager.DomainModels.Product", "Product")
+                    b.HasOne("ShopManager.Features.Shops.DomainModels.Product", "Product")
                         .WithOne()
-                        .HasForeignKey("ShopManager.DomainModels.Inventory", "ProductId")
+                        .HasForeignKey("ShopManager.Features.Shops.DomainModels.Inventory", "ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ShopManager.DomainModels.Shop", "Shop")
+                    b.HasOne("ShopManager.Features.Shops.DomainModels.Shop", "Shop")
                         .WithMany()
                         .HasForeignKey("ShopId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1445,19 +1452,19 @@ namespace ShopManager.Migrations
                     b.Navigation("Shop");
                 });
 
-            modelBuilder.Entity("ShopManager.DomainModels.Payment", b =>
+            modelBuilder.Entity("ShopManager.Features.Shops.DomainModels.Payment", b =>
                 {
-                    b.HasOne("ShopManager.DomainModels.Sale", null)
+                    b.HasOne("ShopManager.Features.Shops.Sales.DomainModels.Sale", null)
                         .WithMany("Payments")
                         .HasForeignKey("SaleId");
 
-                    b.HasOne("ShopManager.DomainModels.Sale", "Sale")
+                    b.HasOne("ShopManager.Features.Shops.Sales.DomainModels.Sale", "Sale")
                         .WithMany()
                         .HasForeignKey("SalesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ShopManager.DomainModels.Shop", "Shop")
+                    b.HasOne("ShopManager.Features.Shops.DomainModels.Shop", "Shop")
                         .WithMany()
                         .HasForeignKey("ShopId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1468,20 +1475,20 @@ namespace ShopManager.Migrations
                     b.Navigation("Shop");
                 });
 
-            modelBuilder.Entity("ShopManager.DomainModels.Product", b =>
+            modelBuilder.Entity("ShopManager.Features.Shops.DomainModels.Product", b =>
                 {
-                    b.HasOne("ShopManager.DomainModels.FairlyUsedItem", "FairlyUsedItem")
+                    b.HasOne("ShopManager.Features.Shops.DomainModels.FairlyUsedItem", "FairlyUsedItem")
                         .WithMany()
                         .HasForeignKey("FairlyUsedItemId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("ShopManager.DomainModels.Shop", "Shop")
+                    b.HasOne("ShopManager.Features.Shops.DomainModels.Shop", "Shop")
                         .WithMany()
                         .HasForeignKey("ShopId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ShopManager.DomainModels.Supplier", "Supplier")
+                    b.HasOne("ShopManager.Features.Shops.DomainModels.Supplier", "Supplier")
                         .WithMany("Products")
                         .HasForeignKey("SupplierId")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -1494,9 +1501,31 @@ namespace ShopManager.Migrations
                     b.Navigation("Supplier");
                 });
 
-            modelBuilder.Entity("ShopManager.DomainModels.Sale", b =>
+            modelBuilder.Entity("ShopManager.Features.Shops.DomainModels.Shop", b =>
                 {
-                    b.HasOne("ShopManager.DomainModels.Customer", "Customer")
+                    b.HasOne("ShopManager.Features.Tenants.DomainModels.Tenant", "Tenant")
+                        .WithMany("Shops")
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("ShopManager.Features.Shops.DomainModels.Supplier", b =>
+                {
+                    b.HasOne("ShopManager.Features.Shops.DomainModels.Shop", "Shop")
+                        .WithMany()
+                        .HasForeignKey("ShopId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Shop");
+                });
+
+            modelBuilder.Entity("ShopManager.Features.Shops.Sales.DomainModels.Sale", b =>
+                {
+                    b.HasOne("ShopManager.Features.Shops.DomainModels.Customer", "Customer")
                         .WithMany("Sales")
                         .HasForeignKey("CustomerId");
 
@@ -1506,7 +1535,7 @@ namespace ShopManager.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("ShopManager.DomainModels.Shop", "Shop")
+                    b.HasOne("ShopManager.Features.Shops.DomainModels.Shop", "Shop")
                         .WithMany()
                         .HasForeignKey("ShopId")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -1519,21 +1548,21 @@ namespace ShopManager.Migrations
                     b.Navigation("Shop");
                 });
 
-            modelBuilder.Entity("ShopManager.DomainModels.SaleItem", b =>
+            modelBuilder.Entity("ShopManager.Features.Shops.Sales.DomainModels.SaleItem", b =>
                 {
-                    b.HasOne("ShopManager.DomainModels.Product", "Product")
+                    b.HasOne("ShopManager.Features.Shops.DomainModels.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ShopManager.DomainModels.Sale", "Sale")
+                    b.HasOne("ShopManager.Features.Shops.Sales.DomainModels.Sale", "Sale")
                         .WithMany("SaleItems")
                         .HasForeignKey("SaleId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("ShopManager.DomainModels.Shop", "Shop")
+                    b.HasOne("ShopManager.Features.Shops.DomainModels.Shop", "Shop")
                         .WithMany()
                         .HasForeignKey("ShopId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1542,28 +1571,6 @@ namespace ShopManager.Migrations
                     b.Navigation("Product");
 
                     b.Navigation("Sale");
-
-                    b.Navigation("Shop");
-                });
-
-            modelBuilder.Entity("ShopManager.DomainModels.Shop", b =>
-                {
-                    b.HasOne("ShopManager.Features.Tenants.DomainModels.Tenant", "Tenant")
-                        .WithMany("Shops")
-                        .HasForeignKey("TenantId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("Tenant");
-                });
-
-            modelBuilder.Entity("ShopManager.DomainModels.Supplier", b =>
-                {
-                    b.HasOne("ShopManager.DomainModels.Shop", "Shop")
-                        .WithMany()
-                        .HasForeignKey("ShopId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
 
                     b.Navigation("Shop");
                 });
@@ -1589,11 +1596,19 @@ namespace ShopManager.Migrations
 
             modelBuilder.Entity("ShopManager.Features.Tenants.DomainModels.TenantInvoice", b =>
                 {
+                    b.HasOne("ShopManager.Features.Tenants.DomainModels.SubscriptionPlanType", "SubscriptionPlanType")
+                        .WithMany()
+                        .HasForeignKey("SubscriptionPlanTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("ShopManager.Features.Tenants.DomainModels.Tenant", "Tenant")
                         .WithMany("TenantInvoices")
                         .HasForeignKey("TenantId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.Navigation("SubscriptionPlanType");
 
                     b.Navigation("Tenant");
                 });
@@ -1612,9 +1627,17 @@ namespace ShopManager.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.HasOne("ShopManager.Features.Tenants.DomainModels.TenantInvoice", "TenantInvoice")
+                        .WithMany("TenantPayments")
+                        .HasForeignKey("TenantInvoiceId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.Navigation("PaymentMethod");
 
                     b.Navigation("Tenant");
+
+                    b.Navigation("TenantInvoice");
                 });
 
             modelBuilder.Entity("ShopManager.Features.Tenants.DomainModels.TenantPaymentMethod", b =>
@@ -1628,26 +1651,26 @@ namespace ShopManager.Migrations
                     b.Navigation("Tenant");
                 });
 
-            modelBuilder.Entity("ShopManager.DomainModels.Customer", b =>
+            modelBuilder.Entity("ShopManager.Features.Shops.DomainModels.Customer", b =>
                 {
                     b.Navigation("Sales");
                 });
 
-            modelBuilder.Entity("ShopManager.DomainModels.Product", b =>
+            modelBuilder.Entity("ShopManager.Features.Shops.DomainModels.Product", b =>
                 {
                     b.Navigation("Categories");
                 });
 
-            modelBuilder.Entity("ShopManager.DomainModels.Sale", b =>
+            modelBuilder.Entity("ShopManager.Features.Shops.DomainModels.Supplier", b =>
+                {
+                    b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("ShopManager.Features.Shops.Sales.DomainModels.Sale", b =>
                 {
                     b.Navigation("Payments");
 
                     b.Navigation("SaleItems");
-                });
-
-            modelBuilder.Entity("ShopManager.DomainModels.Supplier", b =>
-                {
-                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("ShopManager.Features.Tenants.DomainModels.SubscriptionPlanType", b =>
@@ -1665,6 +1688,11 @@ namespace ShopManager.Migrations
 
                     b.Navigation("TenantInvoices");
 
+                    b.Navigation("TenantPayments");
+                });
+
+            modelBuilder.Entity("ShopManager.Features.Tenants.DomainModels.TenantInvoice", b =>
+                {
                     b.Navigation("TenantPayments");
                 });
 

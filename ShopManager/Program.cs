@@ -7,8 +7,12 @@ using NodaTime.Text;
 using ShopManager.Data;
 using ShopManager.DomainModels;
 using ShopManager.Features.Shops;
+using ShopManager.Features.Shops.Abstractions;
+using ShopManager.Features.Shops.Categories;
+using ShopManager.Features.Shops.Categories.Validations;
 using ShopManager.Features.Shops.DomainModels;
 using ShopManager.Features.Shops.Products;
+using ShopManager.Features.Shops.Services;
 using ShopManager.Features.Shops.Validations;
 using ShopManager.Features.Tenants;
 using ShopManager.Features.Tenants.Abstractions;
@@ -50,12 +54,15 @@ builder.Services.AddScoped<IValidator<CreateShopDto>, ValidateCreateShopDto>();
 builder.Services.AddScoped<IValidator<UpdateShopDto>, ValidateUpdateShopDto>();
 builder.Services.AddScoped<IValidator<CreateSubscriptionPlanTypeDto>, ValidateCreateSubscriptionPlanType>();
 builder.Services.AddScoped<IValidator<CreateSubscriptionPlanDto>, ValidateCreateSubscriptionPlan>();
+builder.Services.AddScoped<IValidator<CreateTenantDto>, ValidateCreateTenant>();
+builder.Services.AddScoped<IValidator<CreateCategoryDto>, ValidateCreateCategoryDto>();
 
 builder.Services.AddScoped<IShopCommandService, ShopsCommandService>();
 builder.Services.AddScoped<ITenantCommandService, TenantCommandService>();
 builder.Services.AddScoped<ISubscriptionPlan, SubscriptionPlanService>();
 builder.Services.AddScoped<ITenantPaymentMethodCommandService, TenantPaymentMethodCommandService>();
 builder.Services.AddScoped<ITenantPaymentCommandService, TenantPaymentCommandService>();
+builder.Services.AddScoped<ICategoryCommandService, CategoryCommandService>();
 builder.Services.AddIdentityApiEndpoints<ApplicationUser>()
     .AddEntityFrameworkStores<ShopManagerBaseContext>()
     .AddApiEndpoints();
@@ -74,6 +81,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.MapIdentityApi<ApplicationUser>();
 app.MapShopEndpoints();
+app.MapCategoriesEndpoints();
 app.MapProductsEndpoints();
 app.MapTenantEndpoints();
 app.MapSubscriptionPlanEndpoints();

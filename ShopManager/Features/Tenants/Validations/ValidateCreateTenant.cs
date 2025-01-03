@@ -21,8 +21,8 @@ public class ValidateCreateTenant : AbstractValidator<CreateTenantDto>
         RuleFor(x => x.PhoneNumber).NotEmpty().WithMessage("Phone Number is required");
         RuleFor(x => x.Address).NotEmpty().WithMessage("Address is required");
         RuleFor(x => x.BillingAddress).NotEmpty().WithMessage("Billing Address is required");
-        RuleFor(x => x.ActivationStatus).NotEmpty().WithMessage("Activation Status is required");
-        RuleFor(x => x.PaymentStatus).NotEmpty().WithMessage("Payment Status is required");
+        // RuleFor(x => x.ActivationStatus).NotEmpty().WithMessage("Activation Status is required");
+        // RuleFor(x => x.PaymentStatus).NotEmpty().WithMessage("Payment Status is required");
         RuleFor(x => x.NextBillingDate).NotEmpty().WithMessage("Next Billing Date is required");
         RuleFor(x => x.SubscriptionStartDate).NotEmpty().WithMessage("Subscription Start Date is required");
         RuleFor(x => x.SubscriptionEndDate).NotEmpty().WithMessage("Subscription End Date is required");

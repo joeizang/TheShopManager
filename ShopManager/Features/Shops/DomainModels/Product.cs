@@ -20,9 +20,7 @@ public class Product : BaseDomainModel
 
         public bool IsFairlyUsed { get; set; }
 
-        public Guid CategoryId { get; set; }
-
-        public List<Category> Categories { get; set; } = new();
+        public List<Category> Categories { get; set; } = [];
 
         public Guid? FairlyUsedItemId { get; set; }
 
@@ -30,5 +28,5 @@ public class Product : BaseDomainModel
 
         public Guid ShopId { get; set; }
 
-        public Shop Shop { get; set; } = new();
+        public Shop Shop { get; set; } = default!;
     }

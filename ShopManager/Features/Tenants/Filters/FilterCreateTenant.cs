@@ -12,7 +12,7 @@ namespace ShopManager.Features.Tenants.Filters
             var model = context.GetArgument<CreateTenantDto>(1);
             var validationResult = await validator.ValidateAsync(model);
             return validationResult.IsValid ? await next(context)
-                : new Result<IResult>(Results.ValidationProblem(validationResult.ToDictionary()));
+                : Results.ValidationProblem(validationResult.ToDictionary());
         }
     }
 }

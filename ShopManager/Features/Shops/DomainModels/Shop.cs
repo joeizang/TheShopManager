@@ -26,4 +26,9 @@ public class Shop : BaseDomainModel
     public Guid TenantId { get; set; }
 
     public Tenant Tenant { get; set; } = default!;
+    
+    public Shop(Guid tenantId)
+    {
+        TenantId = tenantId;
+    }
 }

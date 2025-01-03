@@ -20,6 +20,7 @@ namespace ShopManager.Migrations
                 .Annotation("Npgsql:Enum:billing_cycle", "monthly,quarterly,yearly")
                 .Annotation("Npgsql:Enum:currency", "aud,cad,cny,eur,gbp,ghs,gmd,gnf,inr,jpy,kes,lrd,mwk,mzn,ngn,rwf,sll,ugx,usd,xaf,xof,xpf,zar,zmw")
                 .Annotation("Npgsql:Enum:fairlyused_item_condition", "excellent,fair,good,poor,very_good")
+                .Annotation("Npgsql:Enum:invoice_status", "not_payed,overdue,partially_payed,payed")
                 .Annotation("Npgsql:Enum:payment_method", "bank_transfer,cash,cheque,crypto_currency,mobile_money,not_set,pos,ussd")
                 .Annotation("Npgsql:Enum:payment_status", "failed,pending,successful,uninitialized");
 
@@ -28,6 +29,14 @@ namespace ShopManager.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
+                    Discriminator = table.Column<string>(type: "character varying(21)", maxLength: 21, nullable: false),
+                    RoleDescription = table.Column<string>(type: "text", nullable: true),
+                    RoleCode = table.Column<string>(type: "text", nullable: true),
+                    ElevatedUser = table.Column<bool>(type: "boolean", nullable: true),
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: true),
+                    CreatedAt = table.Column<Instant>(type: "timestamp with time zone", nullable: true),
+                    UpdatedAt = table.Column<Instant>(type: "timestamp with time zone", nullable: true),
                     Name = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     NormalizedName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     ConcurrencyStamp = table.Column<string>(type: "text", nullable: true)
@@ -38,7 +47,29 @@ namespace ShopManager.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Tenant",
+                name: "SubscriptionPlanTypes",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false),
+                    BillingCycle = table.Column<BillingCycle>(type: "billing_cycle", nullable: false),
+                    Features = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: false),
+                    Discount = table.Column<decimal>(type: "numeric", nullable: false),
+                    Price_amount = table.Column<decimal>(type: "numeric", nullable: false),
+                    Price_currency = table.Column<Currency>(type: "currency", nullable: false),
+                    CreatedAt = table.Column<Instant>(type: "timestamp with time zone", nullable: false),
+                    UpdatedAt = table.Column<Instant>(type: "timestamp with time zone", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SubscriptionPlanTypes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Tenants",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -48,17 +79,19 @@ namespace ShopManager.Migrations
                     PhoneNumber = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
                     Address = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
                     BillingAddress = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    ActivationStatus = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
+                    ActivationStatus = table.Column<ActivationStatus>(type: "activation_status", nullable: false, defaultValue: ActivationStatus.INACTIVE),
                     PaymentStatus = table.Column<PaymentStatus>(type: "payment_status", nullable: false, defaultValue: PaymentStatus.UNINITIALIZED),
-                    NextBillingDate = table.Column<ZonedDateTime>(type: "timestamp with time zone", nullable: false),
-                    SubscriptionStartDate = table.Column<ZonedDateTime>(type: "timestamp with time zone", nullable: false),
-                    SubscriptionEndDate = table.Column<ZonedDateTime>(type: "timestamp with time zone", nullable: false),
+                    NextBillingDate = table.Column<Instant>(type: "timestamp with time zone", nullable: false),
+                    SubscriptionStartDate = table.Column<Instant>(type: "timestamp with time zone", nullable: false),
+                    SubscriptionEndDate = table.Column<Instant>(type: "timestamp with time zone", nullable: false),
                     CreatedAt = table.Column<Instant>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<Instant>(type: "timestamp with time zone", nullable: false)
+                    UpdatedAt = table.Column<Instant>(type: "timestamp with time zone", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Tenant", x => x.Id);
+                    table.PrimaryKey("PK_Tenants", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -98,71 +131,84 @@ namespace ShopManager.Migrations
                     Status = table.Column<bool>(type: "boolean", nullable: false),
                     TenantId = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedAt = table.Column<Instant>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<Instant>(type: "timestamp with time zone", nullable: false)
+                    UpdatedAt = table.Column<Instant>(type: "timestamp with time zone", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Shops", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Shops_Tenant_TenantId",
+                        name: "FK_Shops_Tenants_TenantId",
                         column: x => x.TenantId,
-                        principalTable: "Tenant",
+                        principalTable: "Tenants",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "SubscriptionPlan",
+                name: "SubscriptionPlans",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    Description = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
                     Status = table.Column<ActivationStatus>(type: "activation_status", nullable: false, defaultValue: ActivationStatus.INACTIVE),
-                    BillingCycle = table.Column<BillingCycle>(type: "billing_cycle", nullable: false),
-                    Features = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
+                    SubscriptionPlanTypeId = table.Column<Guid>(type: "uuid", nullable: false),
                     TenantId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Price_amount = table.Column<decimal>(type: "numeric", nullable: false),
-                    Price_currency = table.Column<Currency>(type: "currency", nullable: false),
                     CreatedAt = table.Column<Instant>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<Instant>(type: "timestamp with time zone", nullable: false)
+                    UpdatedAt = table.Column<Instant>(type: "timestamp with time zone", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SubscriptionPlan", x => x.Id);
+                    table.PrimaryKey("PK_SubscriptionPlans", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SubscriptionPlan_Tenant_TenantId",
+                        name: "FK_SubscriptionPlans_SubscriptionPlanTypes_SubscriptionPlanTyp~",
+                        column: x => x.SubscriptionPlanTypeId,
+                        principalTable: "SubscriptionPlanTypes",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_SubscriptionPlans_Tenants_TenantId",
                         column: x => x.TenantId,
-                        principalTable: "Tenant",
+                        principalTable: "Tenants",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "TenantInvoice",
+                name: "TenantInvoices",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    DueDate = table.Column<ZonedDateTime>(type: "timestamp with time zone", nullable: false),
+                    DueDate = table.Column<Instant>(type: "timestamp with time zone", nullable: false),
                     InvoiceReference = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Description = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false),
-                    Status = table.Column<int>(type: "integer", nullable: false),
+                    InvoiceStatus = table.Column<InvoiceStatus>(type: "invoice_status", nullable: false),
+                    SubscriptionPlanTypeId = table.Column<Guid>(type: "uuid", nullable: false),
                     TenantId = table.Column<Guid>(type: "uuid", nullable: false),
                     AmountDue_amount = table.Column<decimal>(type: "numeric", nullable: false),
                     AmountDue_currency = table.Column<Currency>(type: "currency", nullable: false),
                     CreatedAt = table.Column<Instant>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<Instant>(type: "timestamp with time zone", nullable: false)
+                    UpdatedAt = table.Column<Instant>(type: "timestamp with time zone", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TenantInvoice", x => x.Id);
+                    table.PrimaryKey("PK_TenantInvoices", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_TenantInvoice_Tenant_TenantId",
+                        name: "FK_TenantInvoices_SubscriptionPlanTypes_SubscriptionPlanTypeId",
+                        column: x => x.SubscriptionPlanTypeId,
+                        principalTable: "SubscriptionPlanTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_TenantInvoices_Tenants_TenantId",
                         column: x => x.TenantId,
-                        principalTable: "Tenant",
+                        principalTable: "Tenants",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "TenantPaymentMethod",
+                name: "TenantPaymentMethods",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -171,15 +217,17 @@ namespace ShopManager.Migrations
                     IsDefaultPaymentMethod = table.Column<bool>(type: "boolean", nullable: false),
                     PaymentMethod = table.Column<PaymentMethod>(type: "payment_method", nullable: false),
                     CreatedAt = table.Column<Instant>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<Instant>(type: "timestamp with time zone", nullable: false)
+                    UpdatedAt = table.Column<Instant>(type: "timestamp with time zone", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TenantPaymentMethod", x => x.Id);
+                    table.PrimaryKey("PK_TenantPaymentMethods", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_TenantPaymentMethod_Tenant_TenantId",
+                        name: "FK_TenantPaymentMethods_Tenants_TenantId",
                         column: x => x.TenantId,
-                        principalTable: "Tenant",
+                        principalTable: "Tenants",
                         principalColumn: "Id");
                 });
 
@@ -189,11 +237,13 @@ namespace ShopManager.Migrations
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
                     ShopId = table.Column<Guid>(type: "uuid", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false),
                     FirstName = table.Column<string>(type: "text", nullable: false),
                     LastName = table.Column<string>(type: "text", nullable: false),
                     Address = table.Column<string>(type: "text", nullable: false),
-                    CreatedAt = table.Column<ZonedDateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<ZonedDateTime>(type: "timestamp with time zone", nullable: false),
+                    CreatedAt = table.Column<Instant>(type: "timestamp with time zone", nullable: false),
+                    UpdatedAt = table.Column<Instant>(type: "timestamp with time zone", nullable: false),
                     UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
@@ -232,7 +282,9 @@ namespace ShopManager.Migrations
                     Address = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false),
                     ShopId = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedAt = table.Column<Instant>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<Instant>(type: "timestamp with time zone", nullable: false)
+                    UpdatedAt = table.Column<Instant>(type: "timestamp with time zone", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -256,7 +308,9 @@ namespace ShopManager.Migrations
                     SupplierEmailAddress = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     ShopId = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedAt = table.Column<Instant>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<Instant>(type: "timestamp with time zone", nullable: false)
+                    UpdatedAt = table.Column<Instant>(type: "timestamp with time zone", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -270,33 +324,41 @@ namespace ShopManager.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TenantPayment",
+                name: "TenantPayments",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    PaymentDate = table.Column<ZonedDateTime>(type: "timestamp with time zone", nullable: false),
+                    PaymentDate = table.Column<Instant>(type: "timestamp with time zone", nullable: false),
                     PaymentReference = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Description = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false),
                     Status = table.Column<PaymentStatus>(type: "payment_status", nullable: false),
+                    TenantInvoiceId = table.Column<Guid>(type: "uuid", nullable: false),
                     PaymentMethodId = table.Column<Guid>(type: "uuid", nullable: false),
                     TenantId = table.Column<Guid>(type: "uuid", nullable: false),
                     AmountPaid_amount = table.Column<decimal>(type: "numeric", nullable: false),
                     AmountPaid_currency = table.Column<Currency>(type: "currency", nullable: false),
                     CreatedAt = table.Column<Instant>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<Instant>(type: "timestamp with time zone", nullable: false)
+                    UpdatedAt = table.Column<Instant>(type: "timestamp with time zone", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TenantPayment", x => x.Id);
+                    table.PrimaryKey("PK_TenantPayments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_TenantPayment_TenantPaymentMethod_PaymentMethodId",
-                        column: x => x.PaymentMethodId,
-                        principalTable: "TenantPaymentMethod",
+                        name: "FK_TenantPayments_TenantInvoices_TenantInvoiceId",
+                        column: x => x.TenantInvoiceId,
+                        principalTable: "TenantInvoices",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_TenantPayment_Tenant_TenantId",
+                        name: "FK_TenantPayments_TenantPaymentMethods_PaymentMethodId",
+                        column: x => x.PaymentMethodId,
+                        principalTable: "TenantPaymentMethods",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_TenantPayments_Tenants_TenantId",
                         column: x => x.TenantId,
-                        principalTable: "Tenant",
+                        principalTable: "Tenants",
                         principalColumn: "Id");
                 });
 
@@ -398,7 +460,9 @@ namespace ShopManager.Migrations
                     TotalAmount_amount = table.Column<decimal>(type: "numeric", nullable: false),
                     TotalAmount_currency = table.Column<Currency>(type: "currency", nullable: false),
                     CreatedAt = table.Column<Instant>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<Instant>(type: "timestamp with time zone", nullable: false)
+                    UpdatedAt = table.Column<Instant>(type: "timestamp with time zone", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -427,14 +491,16 @@ namespace ShopManager.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     SalesId = table.Column<Guid>(type: "uuid", nullable: false),
                     ShopId = table.Column<Guid>(type: "uuid", nullable: false),
-                    PaymentDate = table.Column<ZonedDateTime>(type: "timestamp with time zone", nullable: false),
+                    PaymentDate = table.Column<Instant>(type: "timestamp with time zone", nullable: false),
                     PaymentMethod = table.Column<PaymentMethod>(type: "payment_method", maxLength: 50, nullable: false),
                     PaymentReference = table.Column<string>(type: "text", nullable: false),
                     SaleId = table.Column<Guid>(type: "uuid", nullable: true),
                     AmountPaid_amount = table.Column<decimal>(type: "numeric", nullable: false),
                     AmountPaid_currency = table.Column<Currency>(type: "currency", nullable: false),
                     CreatedAt = table.Column<Instant>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<Instant>(type: "timestamp with time zone", nullable: false)
+                    UpdatedAt = table.Column<Instant>(type: "timestamp with time zone", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -467,8 +533,11 @@ namespace ShopManager.Migrations
                     CategoryName = table.Column<string>(type: "text", nullable: false),
                     CategoryDescription = table.Column<string>(type: "text", nullable: false),
                     ShopId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ProductId = table.Column<Guid>(type: "uuid", nullable: true),
                     CreatedAt = table.Column<Instant>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<Instant>(type: "timestamp with time zone", nullable: false)
+                    UpdatedAt = table.Column<Instant>(type: "timestamp with time zone", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -488,7 +557,7 @@ namespace ShopManager.Migrations
                     PurchaseId = table.Column<Guid>(type: "uuid", nullable: false),
                     CustomerId = table.Column<Guid>(type: "uuid", nullable: false),
                     ProductId = table.Column<Guid>(type: "uuid", nullable: false),
-                    DateBought = table.Column<ZonedDateTime>(type: "timestamp with time zone", nullable: false),
+                    DateBought = table.Column<Instant>(type: "timestamp with time zone", nullable: false),
                     UserId = table.Column<string>(type: "text", nullable: false),
                     Condition = table.Column<FairlyUsedItemCondition>(type: "fairlyused_item_condition", nullable: false),
                     ShopId = table.Column<Guid>(type: "uuid", nullable: false),
@@ -498,7 +567,9 @@ namespace ShopManager.Migrations
                     Price_amount = table.Column<decimal>(type: "numeric", nullable: false),
                     Price_currency = table.Column<Currency>(type: "currency", nullable: false),
                     CreatedAt = table.Column<Instant>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<Instant>(type: "timestamp with time zone", nullable: false)
+                    UpdatedAt = table.Column<Instant>(type: "timestamp with time zone", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -533,7 +604,6 @@ namespace ShopManager.Migrations
                     ProductDescription = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
                     ProductName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     IsFairlyUsed = table.Column<bool>(type: "boolean", nullable: false),
-                    CategoryId = table.Column<Guid>(type: "uuid", nullable: false),
                     FairlyUsedItemId = table.Column<Guid>(type: "uuid", nullable: true),
                     ShopId = table.Column<Guid>(type: "uuid", nullable: false),
                     CostPrice_amount = table.Column<decimal>(type: "numeric", nullable: false),
@@ -541,7 +611,9 @@ namespace ShopManager.Migrations
                     SellingPrice_amount = table.Column<decimal>(type: "numeric", nullable: false),
                     SellingPrice_currency = table.Column<Currency>(type: "currency", nullable: false),
                     CreatedAt = table.Column<Instant>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<Instant>(type: "timestamp with time zone", nullable: false)
+                    UpdatedAt = table.Column<Instant>(type: "timestamp with time zone", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -576,7 +648,9 @@ namespace ShopManager.Migrations
                     ReOrderQuantity = table.Column<double>(type: "double precision", nullable: false),
                     ShopId = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedAt = table.Column<Instant>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<Instant>(type: "timestamp with time zone", nullable: false)
+                    UpdatedAt = table.Column<Instant>(type: "timestamp with time zone", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -609,7 +683,9 @@ namespace ShopManager.Migrations
                     UnitPrice_amount = table.Column<decimal>(type: "numeric", nullable: false),
                     UnitPrice_currency = table.Column<Currency>(type: "currency", nullable: false),
                     CreatedAt = table.Column<Instant>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<Instant>(type: "timestamp with time zone", nullable: false)
+                    UpdatedAt = table.Column<Instant>(type: "timestamp with time zone", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -676,14 +752,14 @@ namespace ShopManager.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Categories_CategoryId",
-                table: "Categories",
-                column: "CategoryId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Categories_CategoryName",
                 table: "Categories",
                 column: "CategoryName");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Categories_ProductId",
+                table: "Categories",
+                column: "ProductId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Categories_ShopId",
@@ -773,11 +849,6 @@ namespace ShopManager.Migrations
                 column: "ShopId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Products_CategoryId",
-                table: "Products",
-                column: "CategoryId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Products_CreatedAt",
                 table: "Products",
                 column: "CreatedAt");
@@ -849,14 +920,13 @@ namespace ShopManager.Migrations
                 column: "TenantId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SubscriptionPlan_Name",
-                table: "SubscriptionPlan",
-                column: "Name",
-                unique: true);
+                name: "IX_SubscriptionPlans_SubscriptionPlanTypeId",
+                table: "SubscriptionPlans",
+                column: "SubscriptionPlanTypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SubscriptionPlan_TenantId",
-                table: "SubscriptionPlan",
+                name: "IX_SubscriptionPlans_TenantId",
+                table: "SubscriptionPlans",
                 column: "TenantId");
 
             migrationBuilder.CreateIndex(
@@ -871,56 +941,66 @@ namespace ShopManager.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tenant_EmailAddress",
-                table: "Tenant",
-                column: "EmailAddress",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TenantInvoice_DueDate",
-                table: "TenantInvoice",
+                name: "IX_TenantInvoices_DueDate",
+                table: "TenantInvoices",
                 column: "DueDate");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TenantInvoice_InvoiceReference",
-                table: "TenantInvoice",
+                name: "IX_TenantInvoices_InvoiceReference",
+                table: "TenantInvoices",
                 column: "InvoiceReference",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_TenantInvoice_TenantId",
-                table: "TenantInvoice",
+                name: "IX_TenantInvoices_SubscriptionPlanTypeId",
+                table: "TenantInvoices",
+                column: "SubscriptionPlanTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TenantInvoices_TenantId",
+                table: "TenantInvoices",
                 column: "TenantId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TenantPayment_PaymentDate",
-                table: "TenantPayment",
+                name: "IX_TenantPaymentMethods_TenantId",
+                table: "TenantPaymentMethods",
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TenantPayments_PaymentDate",
+                table: "TenantPayments",
                 column: "PaymentDate");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TenantPayment_PaymentMethodId",
-                table: "TenantPayment",
+                name: "IX_TenantPayments_PaymentMethodId",
+                table: "TenantPayments",
                 column: "PaymentMethodId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TenantPayment_PaymentReference",
-                table: "TenantPayment",
+                name: "IX_TenantPayments_PaymentReference",
+                table: "TenantPayments",
                 column: "PaymentReference");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TenantPayment_TenantId",
-                table: "TenantPayment",
+                name: "IX_TenantPayments_TenantId",
+                table: "TenantPayments",
                 column: "TenantId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TenantPaymentMethod_TenantId",
-                table: "TenantPaymentMethod",
-                column: "TenantId");
+                name: "IX_TenantPayments_TenantInvoiceId",
+                table: "TenantPayments",
+                column: "TenantInvoiceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tenants_EmailAddress",
+                table: "Tenants",
+                column: "EmailAddress",
+                unique: true);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Categories_Products_CategoryId",
+                name: "FK_Categories_Products_ProductId",
                 table: "Categories",
-                column: "CategoryId",
+                column: "ProductId",
                 principalTable: "Products",
                 principalColumn: "Id");
 
@@ -988,13 +1068,10 @@ namespace ShopManager.Migrations
                 name: "SaleItems");
 
             migrationBuilder.DropTable(
-                name: "SubscriptionPlan");
+                name: "SubscriptionPlans");
 
             migrationBuilder.DropTable(
-                name: "TenantInvoice");
-
-            migrationBuilder.DropTable(
-                name: "TenantPayment");
+                name: "TenantPayments");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -1003,7 +1080,13 @@ namespace ShopManager.Migrations
                 name: "Sales");
 
             migrationBuilder.DropTable(
-                name: "TenantPaymentMethod");
+                name: "TenantInvoices");
+
+            migrationBuilder.DropTable(
+                name: "TenantPaymentMethods");
+
+            migrationBuilder.DropTable(
+                name: "SubscriptionPlanTypes");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
@@ -1012,7 +1095,7 @@ namespace ShopManager.Migrations
                 name: "Shops");
 
             migrationBuilder.DropTable(
-                name: "Tenant");
+                name: "Tenants");
 
             migrationBuilder.DropTable(
                 name: "Products");

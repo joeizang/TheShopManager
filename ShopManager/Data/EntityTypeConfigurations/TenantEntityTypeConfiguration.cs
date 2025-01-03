@@ -40,7 +40,7 @@ public class TenantEntityTypeConfiguration : IEntityTypeConfiguration<Tenant>
             .HasMaxLength(100);
         
         builder.Property(t => t.ActivationStatus)
-            .HasDefaultValue(false)
+            .HasDefaultValue(ActivationStatus.INACTIVE)
             .IsRequired();
         
         builder.Property(t => t.PaymentStatus)
