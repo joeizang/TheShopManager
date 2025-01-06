@@ -24,7 +24,7 @@ Content-Type: application/json
   "ShopDescription": "Ushim's Towers",
   "ShopLogo": "Ushim's Baby World Logo",
   "TaxIdentificationNumber": "TIN5564456",
-  "TenantId": "019429dd-ddb6-3e20-a1f8-4add721e4d19"
+  "TenantId": "01943280-357a-d13b-b8f4-4ec71c1a3fa0"
 }
 
 ###
@@ -88,8 +88,27 @@ Content-Type: application/json
 {
   "Name": "Onesies",
   "Description": "Pin down for babies",
-  "ShopId": "019429ea-970b-057f-fbed-e11a747f8bc7"
+  "ShopId": "01943284-0049-f7da-2725-1e3a60ba1ea4"
 }
+
+###
+
+### Create a Category
+POST {{ShopManager_HostAddress}}/shops/categories/
+Accept: application/json
+Content-Type: application/json
+
+{
+  "Name": "Toys",
+  "Description": "Toys for babies",
+  "ShopId": "01943284-0049-f7da-2725-1e3a60ba1ea4"
+}
+
+###
+
+### Get Shop Categories
+GET {{ShopManager_HostAddress}}/shops/categories
+Accept: application/json
 
 ###
 
@@ -114,7 +133,7 @@ Content-Type: application/json
   "PhoneNumber": "08034567890",
   "Address": "Rwang Pam street, Jos, Plateau State",
   "BillingAddress": "Rwang Pam street, Jos, Plateau State",
-  "ActivationStatus": false,
+  "ActivationStatus": 0,
   "NextBillingDate": "2024-12-21T23:06:57.174Z",
   "SubscriptionStartDate": "2024-09-21T23:06:57.174Z",
   "SubscriptionEndDate": "2024-11-19T23:06:57.174Z",
@@ -140,7 +159,7 @@ Content-Type: application/json
   "SubscriptionStartDate": "2025-01-03T01:38:50.185Z",
   "SubscriptionEndDate": "2025-02-04T01:38:50.185Z",
   "PaymentStatus": 1,
-  "SubscriptionPlanTypeId": "019429d4-9da6-9d50-929f-d6fd1dc62ec7"
+  "SubscriptionPlanTypeId": "01943278-a523-495c-75ae-493304b0f7a0"
 }
 
 ###
@@ -186,3 +205,20 @@ Content-Type: application/json
   "Features": "Have one shop, basic inventory management, basic sales management",
   "Duration": 0
 }
+
+###
+
+### Create a new SubscriptionPlanType
+POST {{ShopManager_HostAddress}}/subscriptionplantypes/
+Accept: application/json
+Content-Type: application/json
+
+{
+  "Name": "Pro",
+  "Description": "Pro Subscription Plan",
+  "Price": 8000,
+  "Features": "Have five shops, with everything from Basic Plan plus Invoicing, Reporting.",
+  "Duration": 0
+}
+
+###
