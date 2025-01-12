@@ -1,6 +1,3 @@
 namespace ShopManager.Features.Shops.Products;
 
-public class ProductsDto
-{
-
-}
+public record ProductsDto(string ProductName, decimal SellingPrice, string ProductDescription, Guid ProductId);

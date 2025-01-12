@@ -6,22 +6,18 @@ namespace ShopManager.Features.Shops.Categories;
 
 public static class CategoriesQueryService
 {
-    public static readonly Func<ShopManagerBaseContext, Guid, IEnumerable<CategoryDto>> GetCategories =
-        EF.CompileQuery((ShopManagerBaseContext context, Guid shopId) =>
+    public static readonly Func<ShopManagerBaseContext, Guid, CancellationToken, Task<CategoryDto[]>> GetCategories =
+        EF.CompileQuery((ShopManagerBaseContext context, Guid shopId, CancellationToken token) =>
             context.Categories.AsNoTracking()
                 .Where(c => c.ShopId == shopId)
                 .Select(c => c.ProjectToCategoryDto())
                 .Take(10)
-                .ToList());
+                .ToArrayAsync(token));
     
-    public static async Task<IEnumerable<CategoryDto>> GetAllCategories(Guid shopId, ShopManagerBaseContext context)
-    {
-        var results = await context.Categories.AsNoTracking()
-            .Where(x => x.ShopId == shopId)
-            .Select(x => x.ProjectToCategoryDto())
-            .Take(10)
-            .ToListAsync()
-            .ConfigureAwait(false);
-        return results;
-    }
+    public static readonly Func<ShopManagerBaseContext, Guid, Guid, CancellationToken, Task<CategoryDto?>> GetCategory =
+        EF.CompileQuery((ShopManagerBaseContext context, Guid shopId, Guid categoryId, CancellationToken token) =>
+            context.Categories.AsNoTracking()
+                .Where(c => c.ShopId == shopId && c.Id == categoryId)
+                .Select(c => c.ProjectToCategoryDto())
+                .SingleOrDefaultAsync(token));
 }

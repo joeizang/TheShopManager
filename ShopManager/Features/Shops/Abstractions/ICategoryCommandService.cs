@@ -8,7 +8,7 @@ public interface ICategoryCommandService
 {
     Task<Option<CategoryDto>> CreateCategoryAsync(CreateCategoryDto dto, CancellationToken cancellationToken);
     
-    Task<Result<CategoryDto>> UpdateCategoryAsync(int categoryId, CreateCategoryDto dto, CancellationToken cancellationToken);
+    Task<Option<CategoryDto>> UpdateCategoryAsync(Guid shopId, Guid categoryId, CreateCategoryDto dto, CancellationToken cancellationToken);
     
-    Task DeleteCategoryAsync(int categoryId, CancellationToken cancellationToken);
+    Task<Option<IResult>> DeleteCategoryAsync(Guid shopId, Guid categoryId, CancellationToken cancellationToken);
 }

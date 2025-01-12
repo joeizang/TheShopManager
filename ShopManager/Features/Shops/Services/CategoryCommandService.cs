@@ -20,14 +20,30 @@ public class CategoryCommandService(ShopManagerBaseContext context) : ICategoryC
         return result is null ? Option<CategoryDto>.None : Option<CategoryDto>.Some(result.MapToCategoryDto());
     }
 
-    public async Task<Result<CategoryDto>> UpdateCategoryAsync(int categoryId, CreateCategoryDto dto, 
+    public async Task<Option<CategoryDto>> UpdateCategoryAsync(Guid shopId, Guid categoryId, CreateCategoryDto dto,
         CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var category = await context.Categories.AsNoTracking()
+            .SingleOrDefaultAsync(x => x.Id == categoryId && x.ShopId == shopId, cancellationToken)
+            .ConfigureAwait(false);
+        if(category is null)
+            return Option<CategoryDto>.None;
+        category.UpdateCategory(dto);
+        context.Entry(category).State = EntityState.Modified;
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        return Option<CategoryDto>.Some(category.MapToCategoryDto());
     }
 
-    public async Task DeleteCategoryAsync(int categoryId, CancellationToken cancellationToken)
+    public async Task<Option<IResult>> DeleteCategoryAsync(Guid shopId, Guid categoryId, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var category = await context.Categories.AsNoTracking()
+            .SingleOrDefaultAsync(x => x.Id == categoryId && x.ShopId == shopId, cancellationToken)
+            .ConfigureAwait(false);
+        if(category is null)
+            return Option<IResult>.None;
+        category.IsDeleted = true;
+        context.Entry(category).State = EntityState.Modified;
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        return Option<IResult>.Some(TypedResults.NoContent());
     }
 }

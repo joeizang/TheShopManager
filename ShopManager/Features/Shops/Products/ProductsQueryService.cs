@@ -1,20 +1,21 @@
 using Microsoft.EntityFrameworkCore;
+using NodaTime;
 using ShopManager.Data;
 
 namespace ShopManager.Features.Shops.Products;
 
 public class ProductsQueryService
 {
-    public static readonly Func<ShopManagerBaseContext, Guid, IEnumerable<object>>
-        GetProducts = EF.CompileQuery((ShopManagerBaseContext context, Guid shopId) =>
+    public static readonly Func<ShopManagerBaseContext, Guid, Instant, CancellationToken, Task<ProductsDto[]>>
+        GetProducts = EF.CompileQuery((ShopManagerBaseContext context, Guid shopId,
+                Instant cursor, CancellationToken token) =>
             context.Products.AsNoTracking()
-                .Include(x => x.Supplier)
-                .Include(x => x.Shop)
-                .Include(x => x.Categories.Where(c => c.ShopId == shopId))
                 .Where(x => x.ShopId == shopId)
-                .OrderByDescending(x => x.CreatedAt)
-                .ThenBy(x => x.Id)
-                .Select(p => new { p.ProductName, p.SellingPrice, p.ProductDescription, p.Id })
+                .Where(x => x.CreatedAt > cursor)
+                .OrderByDescending(x => x.Id)
+                .ThenBy(x => x.CreatedAt)
+                .Select(p => new ProductsDto( p.ProductName, p.SellingPrice.Amount, p.ProductDescription, p.Id))
                 .AsSplitQuery()
-                .Take(10));
+                .Take(10)
+                .ToArrayAsync(token));
 }

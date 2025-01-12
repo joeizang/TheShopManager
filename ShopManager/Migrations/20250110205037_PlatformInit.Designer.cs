@@ -16,7 +16,7 @@ using ShopManager.Features.Shops.DomainModels;
 namespace ShopManager.Migrations
 {
     [DbContext(typeof(ShopManagerBaseContext))]
-    [Migration("20250103024152_PlatformInit")]
+    [Migration("20250110205037_PlatformInit")]
     partial class PlatformInit
     {
         /// <inheritdoc />

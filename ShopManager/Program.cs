@@ -29,7 +29,7 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddDbContext<ShopManagerBaseContext>(opt =>
 {
-    opt.UseNpgsql("Host=localhost;Database=shopplatform;Username=postgres;Password=postgres", opt => {
+    opt.UseNpgsql("Host=localhost;Database=shopplatform;Username=postgres;Password=postgres;Port=5432", opt => {
         opt.UseNodaTime();
         opt.MapEnum<Currency>("currency");
         opt.MapEnum<PaymentMethod>("payment_method");
@@ -81,8 +81,6 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.MapIdentityApi<ApplicationUser>();
 app.MapShopEndpoints();
-app.MapCategoriesEndpoints();
-app.MapProductsEndpoints();
 app.MapTenantEndpoints();
 app.MapSubscriptionPlanEndpoints();
 app.MapSubscriptionPlanTypeEndpoints();
