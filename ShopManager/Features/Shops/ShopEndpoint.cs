@@ -18,39 +18,43 @@ public static class ShopEndpoints
         shopGroup.MapGet("/all", EndpointHandler.GetAllShops);
 
         shopGroup.MapPost("", EndpointHandler.CreateShop)
-            .AddEndpointFilter<FilterCreateShop>().Produces<ShopDto>(201).Produces(400);
+            .AddEndpointFilter<FilterCreateShop>()
+            .Produces<ShopDto>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status400BadRequest);
 
         shopGroupWithIds.MapPut("", EndpointHandler.UpdateShop)
             .AddEndpointFilter<FilterUpdateShop>()
-            .Produces<ShopDto>(200).ProducesValidationProblem(400);
+            .Produces<ShopDto>(StatusCodes.Status200OK)
+            .ProducesValidationProblem(StatusCodes.Status400BadRequest);
 
         shopGroupWithIds.MapDelete("", EndpointHandler.DeleteShop)
             .AddEndpointFilter<FilterDeleteShop>()
-            .Produces(204).ProducesValidationProblem(400);
+            .Produces(StatusCodes.Status204NoContent)
+            .ProducesValidationProblem(StatusCodes.Status400BadRequest);
         
         // Categories
         shopGroupWithIds.MapPost("/categories", EndpointHandlers.CreateCategory)
             .AddEndpointFilter<FilterCreateCategory>()
-            .Produces<CategoryDto>(201)
-            .Produces(400)
-            .Produces(500);
+            .Produces<CategoryDto>(StatusCodes.Status201Created)
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status500InternalServerError);
         
         shopGroupWithIds.MapPut("/categories/{categoryId:guid}", EndpointHandlers.UpdateCategory)
             .AddEndpointFilter<FilterUpdateCategory>()
-            .Produces(200)
-            .Produces(400)
-            .Produces(404);
+            .Produces(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status404NotFound);
         
         shopGroupWithIds.MapDelete("/categories/{categoryId:guid}", EndpointHandlers.DeleteCategory)
             .AddEndpointFilter<FilterDeleteCategory>()
-            .Produces(204)
-            .Produces(404);
+            .Produces(StatusCodes.Status204NoContent)
+            .Produces(StatusCodes.Status404NotFound);
 
         shopGroupWithIds.MapGet("/categories/all", EndpointHandlers.GetCategories);
         
         shopGroupWithIds.MapGet("/categories/{categoryId:guid}", EndpointHandlers.GetCategory)
-            .Produces<CategoryDto>(200)
-            .Produces(404);
+            .Produces(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status404NotFound);
         
         // Products
         shopGroupWithIds.MapGet("/products", Products.EndpointHandler.GetProducts)
