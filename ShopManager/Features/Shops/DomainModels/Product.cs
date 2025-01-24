@@ -1,4 +1,5 @@
 ﻿using ShopManager.DomainModels;
+using ShopManager.Features.Shops.Products;
 
 namespace ShopManager.Features.Shops.DomainModels;
 
@@ -29,4 +30,16 @@ public class Product : BaseDomainModel
         public Guid ShopId { get; set; }
 
         public Shop Shop { get; set; } = default!;
+        
+        public void UpdateProduct(AddProductDto dto)
+        {
+            ProductName = dto.ProductName;
+            SellingPrice = new Money(Currency.NGN, dto.SellingPrice);
+            ProductDescription = dto.ProductDescription;
+            Sku = dto.Sku;
+            CostPrice = new Money(Currency.NGN, dto.CostPrice);
+            IsFairlyUsed = dto.IsFairlyUsed;
+            FairlyUsedItemId = dto.FairlyUsedItemId;
+            Categories = dto.CategoryIds.Select(x => new Category { Id = x }).ToList();
+        }
     }

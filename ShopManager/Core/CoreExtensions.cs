@@ -1,6 +1,7 @@
 using NodaTime;
 using NodaTime.Extensions;
 using NodaTime.Text;
+using ShopManager.DomainModels;
 
 namespace ShopManager.Core;
 
@@ -31,5 +32,10 @@ public static class CoreExtensions
             instant = parsedEndDate;
             return true;
         }
+    }
+    
+    public static Money ToDefaultMoneyValue(this Money money, Currency currency)
+    {
+        return new Money(currency, 0m);
     }
 }
