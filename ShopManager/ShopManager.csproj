@@ -40,8 +40,4 @@
     <PackageReference Include="Ulid.SystemTextJson" Version="1.3.4" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Features\Shops\Products\Validations\" />
-  </ItemGroup>
-
 </Project>

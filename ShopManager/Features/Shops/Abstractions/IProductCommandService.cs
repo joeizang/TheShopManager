@@ -7,7 +7,7 @@ public interface IProductCommandService
 {
     Task<Option<ProductsDto>> AddProduct(AddProductDto dto, CancellationToken token);
     
-    Task<Option<ProductsDto>> UpdateProduct(Guid productId, AddProductDto dto, CancellationToken token);
+    Task<Option<ProductsDto>> UpdateProduct(Guid shopId, Guid productId, AddProductDto dto, CancellationToken token);
     
-    Task<Option<ProductsDto>> DeleteProduct(Guid productId, CancellationToken token);
+    Task<Option<IResult>> DeleteProduct(Guid shopId, Guid productId, CancellationToken token);
 }

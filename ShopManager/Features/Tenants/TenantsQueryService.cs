@@ -1,3 +1,4 @@
+using LanguageExt;
 using LanguageExt.Common;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
@@ -11,21 +12,29 @@ public static class TenantsQueryService
     public static readonly Func<ShopManagerBaseContext, IEnumerable<TenantDto>>
         GetTenants = EF.CompileQuery(
             (ShopManagerBaseContext context) =>
-                context.Tenants.AsNoTracking().Select(t => new TenantDto(t.Name, t.PaymentStatus, t.SubscriptionEndDate,
+                context
+                    .Tenants
+                    .AsNoTracking()
+                    .Select(t => new TenantDto(t.Name, t.PaymentStatus, t.SubscriptionEndDate,
                     t.SubscriptionStartDate, t.NextBillingDate, t.ActivationStatus, t.BillingAddress, t.Address,
                     t.PhoneNumber, t.EmailAddress, t.ContactName)));
     
     public static readonly Func<ShopManagerBaseContext, IAsyncEnumerable<TenantDto>>
         GetTenantsAsync = EF.CompileAsyncQuery(
             (ShopManagerBaseContext context) =>
-                context.Tenants.AsNoTracking().Select(t => new TenantDto(t.Name, t.PaymentStatus, t.SubscriptionEndDate,
+                context
+                    .Tenants
+                    .AsNoTracking()
+                    .Select(t => new TenantDto(t.Name, t.PaymentStatus, t.SubscriptionEndDate,
                     t.SubscriptionStartDate, t.NextBillingDate, t.ActivationStatus, t.BillingAddress, t.Address,
                     t.PhoneNumber, t.EmailAddress, t.ContactName)));
 
     public static readonly Func<ShopManagerBaseContext, Instant, IEnumerable<TenantDto>>
         GetCursoredTenants = EF.CompileQuery(
             (ShopManagerBaseContext context, Instant cursor) => 
-                context.Tenants.AsNoTracking()
+                context
+                    .Tenants
+                    .AsNoTracking()
                     .Where(t => t.CreatedAt > cursor)
                     .Select(t => new TenantDto(t.Name, t.PaymentStatus, t.SubscriptionEndDate,
                         t.SubscriptionStartDate, t.NextBillingDate, t.ActivationStatus, t.BillingAddress, t.Address,
@@ -35,7 +44,9 @@ public static class TenantsQueryService
     public static readonly Func<ShopManagerBaseContext, Instant, IAsyncEnumerable<TenantDto>>
         GetCursoredTenantsAsync = EF.CompileAsyncQuery(
             (ShopManagerBaseContext context, Instant cursor) => 
-                context.Tenants.AsNoTracking()
+                context
+                    .Tenants
+                    .AsNoTracking()
                     .Where(t => t.CreatedAt > cursor)
                     .Select(t => new TenantDto(t.Name, t.PaymentStatus, t.SubscriptionEndDate,
                         t.SubscriptionStartDate, t.NextBillingDate, t.ActivationStatus, t.BillingAddress, t.Address,
@@ -45,7 +56,10 @@ public static class TenantsQueryService
     public static readonly Func<ShopManagerBaseContext, Guid, Task<TenantDto?>>
         GetTenantById = EF.CompileAsyncQuery(
             (ShopManagerBaseContext context, Guid tenantId) => 
-                context.Tenants.AsNoTracking().Where(x => x.Id.Equals(tenantId))
+                context
+                    .Tenants
+                    .AsNoTracking()
+                    .Where(x => x.Id.Equals(tenantId))
                     .Select(t => new TenantDto(t.Name, t.PaymentStatus, t.SubscriptionEndDate,
                         t.SubscriptionStartDate, t.NextBillingDate, t.ActivationStatus, t.BillingAddress, t.Address,
                         t.PhoneNumber, t.EmailAddress, t.ContactName))
@@ -144,7 +158,9 @@ public static class TenantsQueryService
     public static readonly Func<ShopManagerBaseContext, IEnumerable<SubscriptionPlanTypeDto>>
         GetSubscriptionPlanTypes = EF.CompileQuery(
             (ShopManagerBaseContext context) =>
-                context.SubscriptionPlanTypes.AsNoTracking()
+                context
+                    .SubscriptionPlanTypes
+                    .AsNoTracking()
                     .Select(spt => new SubscriptionPlanTypeDto(spt.Name, spt.Description, spt.Price.Amount,
                         spt.Price.Currency, spt.Features, spt.Discount))
                     .Take(10)
@@ -153,7 +169,9 @@ public static class TenantsQueryService
     public static readonly Func<ShopManagerBaseContext, Instant, IEnumerable<SubscriptionPlanTypeDto>>
         GetCursoredSubscriptionPlanTypes = EF.CompileQuery(
             (ShopManagerBaseContext context, Instant cursor) =>
-                context.SubscriptionPlanTypes.AsNoTracking()
+                context
+                    .SubscriptionPlanTypes
+                    .AsNoTracking()
                     .Where(spt => spt.CreatedAt > cursor)
                     .Select(spt => new SubscriptionPlanTypeDto(spt.Name, spt.Description, spt.Price.Amount,
                         spt.Price.Currency, spt.Features, spt.Discount))
@@ -162,7 +180,9 @@ public static class TenantsQueryService
     public static readonly Func<ShopManagerBaseContext, Instant, IAsyncEnumerable<SubscriptionPlanTypeDto>>
         GetCursoredSubscriptionPlanTypesAsync = EF.CompileAsyncQuery(
             (ShopManagerBaseContext context, Instant cursor) =>
-                context.SubscriptionPlanTypes.AsNoTracking()
+                context
+                    .SubscriptionPlanTypes
+                    .AsNoTracking()
                     .Where(spt => spt.CreatedAt > cursor)
                     .Select(spt => new SubscriptionPlanTypeDto(spt.Name, spt.Description, spt.Price.Amount,
                         spt.Price.Currency, spt.Features, spt.Discount))
@@ -182,7 +202,9 @@ public static class TenantsQueryService
     public static readonly Func<ShopManagerBaseContext, IEnumerable<TenantPaymentDto>>
         GetTenantPayments = EF.CompileQuery(
             (ShopManagerBaseContext context) =>
-                context.TenantPayments.AsNoTracking()
+                context
+                    .TenantPayments
+                    .AsNoTracking()
                     .Include(tp => tp.Tenant)
                     .Include(tp => tp.PaymentMethod)
                     .Include(tp => tp.TenantInvoice)
@@ -194,7 +216,9 @@ public static class TenantsQueryService
     public static readonly Func<ShopManagerBaseContext, Instant, IEnumerable<TenantPaymentDto>>
         GetCursoredTenantPayments = EF.CompileQuery(
             (ShopManagerBaseContext context, Instant cursor) =>
-                context.TenantPayments.AsNoTracking()
+                context
+                    .TenantPayments
+                    .AsNoTracking()
                     .Include(tp => tp.Tenant)
                     .Include(tp => tp.PaymentMethod)
                     .Include(tp => tp.TenantInvoice)
@@ -207,7 +231,9 @@ public static class TenantsQueryService
     public static readonly Func<ShopManagerBaseContext, Guid, TenantPaymentMethodDto?>
         GetTenantPaymentMethodByTenantId = EF.CompileQuery(
             (ShopManagerBaseContext context, Guid tenantId) =>
-                context.TenantPaymentMethods.AsNoTracking()
+                context
+                    .TenantPaymentMethods
+                    .AsNoTracking()
                     .Where(t => t.TenantId.Equals(tenantId))
                     .Select(t => new TenantPaymentMethodDto(
                         t.TenantId, t.PaymentDetails, t.PaymentMethod, t.IsDefaultPaymentMethod))
@@ -217,7 +243,9 @@ public static class TenantsQueryService
     public static readonly Func<ShopManagerBaseContext, Guid, IEnumerable<TenantPaymentDto>>
         GetTenantPaymentsByTenantId = EF.CompileQuery(
             (ShopManagerBaseContext context, Guid tenantId) =>
-                context.TenantPayments.AsNoTracking()
+                context
+                    .TenantPayments
+                    .AsNoTracking()
                     .Where(t => t.TenantId.Equals(tenantId))
                     .Select(t => new TenantPaymentDto(t.Id, t.TenantId, t.TenantInvoiceId, 
                         t.PaymentMethodId, t.PaymentReference, t.Description,
@@ -227,7 +255,9 @@ public static class TenantsQueryService
     public static readonly Func<ShopManagerBaseContext, Guid, IAsyncEnumerable<TenantPaymentDto>>
         GetTenantPaymentsByTenantIdAsync = EF.CompileAsyncQuery(
             (ShopManagerBaseContext context, Guid tenantId) =>
-                context.TenantPayments.AsNoTracking()
+                context
+                    .TenantPayments
+                    .AsNoTracking()
                     .Where(t => t.TenantId.Equals(tenantId))
                     .Select(t => new TenantPaymentDto(t.Id, t.TenantId, t.TenantInvoiceId, 
                         t.PaymentMethodId, t.PaymentReference, t.Description,
@@ -237,7 +267,9 @@ public static class TenantsQueryService
     public static readonly Func<ShopManagerBaseContext, Guid, IAsyncEnumerable<TenantPaymentDto>>
         GetTenantsPaymentsAsync = EF.CompileAsyncQuery(
             (ShopManagerBaseContext context, Guid tenantId) =>
-                context.TenantPayments.AsNoTracking()
+                context
+                    .TenantPayments
+                    .AsNoTracking()
                     .Where(tp => tp.TenantId.Equals(tenantId))
                     .Select(tp => new TenantPaymentDto(tp.Id, tp.TenantId, tp.TenantInvoiceId,
                         tp.PaymentMethodId, tp.PaymentReference, tp.Description, 
@@ -246,7 +278,9 @@ public static class TenantsQueryService
     public static readonly Func<ShopManagerBaseContext, Guid, TenantPaymentInfoDto?>
         GetTenantPaymentInfo = EF.CompileQuery(
             (ShopManagerBaseContext context, Guid paymentId) =>
-                context.TenantPayments.AsNoTracking()
+                context
+                    .TenantPayments
+                    .AsNoTracking()
                     .Include(tp => tp.Tenant)
                     .Include(tp => tp.TenantInvoice)
                     .Where(tp => tp.Id.Equals(paymentId))
@@ -259,7 +293,9 @@ public static class TenantsQueryService
     public static readonly Func<ShopManagerBaseContext, Guid, IEnumerable<TenantPaymentMethodDto>>
         GetTenantPaymentMethods = EF.CompileQuery(
             (ShopManagerBaseContext context, Guid tenantId) =>
-                context.TenantPaymentMethods.AsNoTracking()
+                context
+                    .TenantPaymentMethods
+                    .AsNoTracking()
                     .Include(tpm => tpm.Tenant)
                     .OrderByDescending(tpm => tpm.CreatedAt)
                     .Where(tpm => tpm.TenantId.Equals(tenantId))
@@ -267,4 +303,15 @@ public static class TenantsQueryService
                         tpm.PaymentMethod, tpm.IsDefaultPaymentMethod))
 
         );
+
+    public static readonly Func<ShopManagerBaseContext, Guid, CancellationToken, TenantShopDto[]>
+        GetTenantsShops = EF.CompileQuery(
+            (ShopManagerBaseContext context, Guid tenantId, CancellationToken token) =>
+                context
+                    .Shops
+                    .AsNoTracking()
+                    .Include(t => t.Tenant)
+                    .Where(t => t.Id.Equals(tenantId))
+                    .OrderByDescending(t => t.CreatedAt)
+                    .Select(s => new TenantShopDto(s.Id, s.ShopName)).ToArray());
 }

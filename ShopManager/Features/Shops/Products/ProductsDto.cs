@@ -1,6 +1,6 @@
 namespace ShopManager.Features.Shops.Products;
 
-public record ProductsDto(string ProductName, decimal SellingPrice, string ProductDescription, 
+public record ProductsDto(string ProductName, decimal SellingPrice, string ProductDescription, string CreatedAt,
     Guid ProductId, Guid ShopId, Guid[] CategoryIds);
 
 public record AddProductDto(string ProductName, decimal SellingPrice, string ProductDescription, Guid ShopId,

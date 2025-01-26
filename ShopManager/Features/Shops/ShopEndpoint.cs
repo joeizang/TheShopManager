@@ -1,6 +1,7 @@
 using ShopManager.Features.Shops.Categories;
 using ShopManager.Features.Shops.Categories.Filters;
 using ShopManager.Features.Shops.Filters;
+using ShopManager.Features.Shops.Products;
 using ShopManager.Features.Shops.Products.Filters;
 using Shops = ShopManager.Features.Shops;
 
@@ -33,34 +34,10 @@ public static class ShopEndpoints
             .ProducesValidationProblem(StatusCodes.Status400BadRequest);
         
         // Categories
-        shopGroupWithIds.MapPost("/categories", EndpointHandlers.CreateCategory)
-            .AddEndpointFilter<FilterCreateCategory>()
-            .Produces<CategoryDto>(StatusCodes.Status201Created)
-            .Produces(StatusCodes.Status400BadRequest)
-            .Produces(StatusCodes.Status500InternalServerError);
-        
-        shopGroupWithIds.MapPut("/categories/{categoryId:guid}", EndpointHandlers.UpdateCategory)
-            .AddEndpointFilter<FilterUpdateCategory>()
-            .Produces(StatusCodes.Status200OK)
-            .Produces(StatusCodes.Status400BadRequest)
-            .Produces(StatusCodes.Status404NotFound);
-        
-        shopGroupWithIds.MapDelete("/categories/{categoryId:guid}", EndpointHandlers.DeleteCategory)
-            .AddEndpointFilter<FilterDeleteCategory>()
-            .Produces(StatusCodes.Status204NoContent)
-            .Produces(StatusCodes.Status404NotFound);
-
-        shopGroupWithIds.MapGet("/categories/all", EndpointHandlers.GetCategories);
-        
-        shopGroupWithIds.MapGet("/categories/{categoryId:guid}", EndpointHandlers.GetCategory)
-            .Produces(StatusCodes.Status200OK)
-            .Produces(StatusCodes.Status404NotFound);
+        CategoryEndpoints.AddCategoryEndpoints(shopGroupWithIds);
         
         // Products
-        shopGroupWithIds.MapGet("/products", Products.EndpointHandler.GetProducts)
-            .AddEndpointFilter<FilterGetProducts>()
-            .Produces(StatusCodes.Status200OK)
-            .Produces(StatusCodes.Status400BadRequest);
+        ProductEndpoints.AddProductEndpoints(shopGroupWithIds);
         
         return shopGroup;
     }

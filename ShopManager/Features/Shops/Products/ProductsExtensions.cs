@@ -32,7 +32,8 @@ public static class ProductsExtensions
     public static ProductsDto MapToProductsDto(this Product product)
     {
         return new ProductsDto(
-            product.ProductName, product.SellingPrice.Amount, product.ProductDescription, product.Id,
+            product.ProductName, product.SellingPrice.Amount, product.ProductDescription, 
+            product.CreatedAt.ToDateTimeUtc().ToLongDateString(), product.Id,
             product.ShopId, product.Categories.Select(x => x.Id).ToArray());
     }
     

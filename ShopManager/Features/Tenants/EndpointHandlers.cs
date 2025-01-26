@@ -147,11 +147,11 @@ public static class EndpointHandlers
         [FromServices] ISubscriptionPlan service)
     {
         var result = await service.CreateSubscriptionPlanType(inputModel);
-        var returned = result.Match<SubscriptionPlanTypeDto>(
-            r => r,
-            error => null);
+        var returned = result.Match<IResult>(
+            r => TypedResults.Created<SubscriptionPlanTypeDto>("", r),
+            error => TypedResults.BadRequest("There was an error creating your subscription plan type!"));
         return returned is not null ? 
-            TypedResults.Created<SubscriptionPlanTypeDto>("", returned) : 
+            TypedResults.Created<IResult>("", returned) : 
             TypedResults.BadRequest("Your subscription plan could not be created!");
     }
 

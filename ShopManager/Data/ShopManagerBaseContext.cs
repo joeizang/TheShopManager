@@ -7,13 +7,18 @@ using ShopManager.Features.Tenants.DomainModels;
 
 namespace ShopManager.Data;
 
-public class ShopManagerBaseContext(DbContextOptions options) : IdentityDbContext<ApplicationUser>(options)
+public class ShopManagerBaseContext : IdentityDbContext<ApplicationUser>
 {
+    public ShopManagerBaseContext(DbContextOptions options) : base(options)
+    {
+    }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
         modelBuilder.Entity<ApplicationUser>()
             .HasQueryFilter(x => x.IsDeleted == true);
+        
         modelBuilder.Entity<ApplicationUser>()
             .Property(x => x.Version)
             .IsRowVersion();
