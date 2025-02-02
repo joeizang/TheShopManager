@@ -40,9 +40,9 @@ public static class ProductEndpoints
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status404NotFound);
         
-        shopGroupWithIds.MapDelete("/products/{productId:guid}", Products.EndpointHandler.DeleteProduct)
-            .AddEndpointFilter<FilterDeleteProduct>()
-            .Produces(StatusCodes.Status204NoContent)
-            .Produces(StatusCodes.Status404NotFound);
+        // shopGroupWithIds.MapDelete("/products/{productId:guid}", Products.EndpointHandler.DeleteProduct)
+        //     .AddEndpointFilter<FilterDeleteProduct>()
+        //     .Produces(StatusCodes.Status204NoContent)
+        //     .Produces(StatusCodes.Status404NotFound);
     }
 }

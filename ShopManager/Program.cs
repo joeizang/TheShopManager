@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using NodaTime;
 using NodaTime.Serialization.SystemTextJson;
 using NodaTime.Text;
+using ShopManager.Core;
+using ShopManager.Core.Middleware;
 using ShopManager.Data;
 using ShopManager.DomainModels;
 using ShopManager.Features.Shops;
@@ -26,6 +28,8 @@ Console.WriteLine(Ulid.NewUlid().ToGuid());
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 // Add EntityFramework support and Identity
+
+// builder.Services.AddScoped<IShopManagerContextAccessor, ShopManagerContextAccessor>();
 
 builder.Services.AddDbContext<ShopManagerBaseContext>(opt =>
 {
@@ -80,6 +84,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.MapIdentityApi<ApplicationUser>();
+app.UseMiddleware<ShopIdentityResolverMiddleware>();
 app.MapShopEndpoints();
 app.MapTenantEndpoints();
 app.MapSubscriptionPlanEndpoints();

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using ShopManager.Core;
 using ShopManager.DomainModels;
 using ShopManager.Features.Shops.DomainModels;
 using ShopManager.Features.Shops.Sales.DomainModels;
@@ -9,8 +10,9 @@ namespace ShopManager.Data;
 
 public class ShopManagerBaseContext : IdentityDbContext<ApplicationUser>
 {
-    public ShopManagerBaseContext(DbContextOptions options) : base(options)
+    public ShopManagerBaseContext(DbContextOptions options, IShopManagerContextAccessor shopManagerContextAccessor) : base(options)
     {
+        ShopId = shopManagerContextAccessor.ShopId;
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -46,5 +48,5 @@ public class ShopManagerBaseContext : IdentityDbContext<ApplicationUser>
     public DbSet<TenantPaymentMethod> TenantPaymentMethods { get; set; } = default!;
     public DbSet<SubscriptionPlan> SubscriptionPlans { get; set; } = default!;
     public DbSet<SubscriptionPlanType> SubscriptionPlanTypes { get; set; } = default!;
-    
+    public Guid ShopId { get; }
 }

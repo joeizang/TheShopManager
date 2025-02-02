@@ -1,17 +1,20 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using ShopManager.Core;
 using ShopManager.DomainModels;
 using ShopManager.Features.Shops.DomainModels;
 
 namespace ShopManager.Data.EntityTypeConfigurations;
 
-public class ProductEntityTypeConfiguration : IEntityTypeConfiguration<Product>
+public class ProductEntityTypeConfiguration(IShopManagerContextAccessor shopManagerContextAccessor) : IEntityTypeConfiguration<Product>
 {
+    private readonly IShopManagerContextAccessor _shopManagerContextAccessor = shopManagerContextAccessor;
+
     public void Configure(EntityTypeBuilder<Product> builder)
     {
         builder.HasQueryFilter(x => x.IsDeleted == false);
-        
+        builder.HasQueryFilter(x => x.ShopId == _shopManagerContextAccessor.ShopId);
         builder.HasKey(p => p.Id);
         
         builder.Property(s => s.Id)

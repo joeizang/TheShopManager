@@ -1,6 +1,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using ShopManager.Core;
 using ShopManager.DomainModels;
 using ShopManager.Features.Shops.Sales.DomainModels;
 
@@ -8,10 +9,17 @@ namespace ShopManager.Data.EntityTypeConfigurations;
 
 public class SaleEntityTypeConfiguration : IEntityTypeConfiguration<Sale>
 {
+    private readonly IShopManagerContextAccessor _shopManagerContextAccessor;
+
+    public SaleEntityTypeConfiguration(IShopManagerContextAccessor shopManagerContextAccessor)
+    {
+        _shopManagerContextAccessor = shopManagerContextAccessor;
+    }
+
     public void Configure(EntityTypeBuilder<Sale> builder)
     {
         builder.HasQueryFilter(x => x.IsDeleted == false);
-        
+        builder.HasQueryFilter(x => x.ShopId == _shopManagerContextAccessor.ShopId);
         builder.HasKey(s => s.Id);
         
         builder.Property(s => s.Id)
